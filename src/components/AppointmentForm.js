@@ -96,12 +96,23 @@ export default class AppointmentForm extends React.Component {
     };
 
     try {
+      // const response = await fetch('http://localhost:3001/api/v1/appointments', {
+      //   method: 'POST',
+      //   body: JSON.stringify(appointment),
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': JSON.parse(sessionStorage.user)
+      //   }
+      // })
+      // var bearer = 'Bearer '+ bearer_token;
       const response = await fetch('http://localhost:3001/api/v1/appointments', {
-        method: 'POST',
-        body: JSON.stringify(appointment),
-        headers: {
-          'Content-Type': 'application/json'
-        }
+      method: 'POST',
+      body: JSON.stringify(appointment),
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+          'Authorization': sessionStorage.user,
+          'Content-Type': 'application/json'}
       })
 
       if (!response.ok) {
