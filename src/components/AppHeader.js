@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import $ from 'jquery';
 
+import '../css/Navbar.css'
 
 export default class AppHeader extends React.Component { 
 	componentDidMount () {
@@ -31,17 +32,32 @@ export default class AppHeader extends React.Component {
 	}
 
 	render () {
+		let userEmail = JSON.parse(sessionStorage.getItem('user')).uid
+		let userId = userEmail.substring(0, userEmail.indexOf("@"))
+
 		if(sessionStorage.getItem('user')) {
 			return (
-				<div>
-						<p>
-							{JSON.parse(sessionStorage.getItem('user')).uid}
-							<button onClick={this.handleSignOut} >Sign out</button>
-						</p>
-					<Link to='/'>
-						<h1>CalReact</h1>
-					</Link>
-				</div>
+				<div className="Navbar">       
+			    <nav className="Navbar__Items Navbar__Items--left">
+				    <Link to='/'>
+				      <h2 className="Navbar__Link">
+				        Meyer & O'Connor
+				      </h2>
+			      </Link>
+			      <div className="Navbar__Link Navbar__Items--selected">
+			        Tasks
+			      </div>
+			    </nav>
+
+			    <nav className="Navbar__Items Navbar__Items--right">
+			      <div className="Navbar__Link">
+			        <p>
+								<span className="userId-navbar">Welcome {userId}</span>
+								<button onClick={this.handleSignOut} >Sign out</button>
+							</p>
+			      </div>
+			    </nav>
+			  </div>
 			)
 		} else {
 			return (

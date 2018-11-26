@@ -1,0 +1,48 @@
+.container {
+	display: flex;
+  justify-content: center;
+  padding: 15px;
+}
+
+.tasks {
+	flex: 0 1 70vw;
+	background-color: white;
+	box-shadow: 0 1px 3px 0 rgba(0,0,0,0.15);
+	padding: 15px;
+}
+
+.tasks svg {
+	height: 15px;
+}
+
+#tasks-header:hover {
+	cursor: pointer;
+	color: #008ce3;
+}
+
+#tasks-header {
+	font-size: 1.5em;
+	font-weight: 700;
+	display: inline-flex;
+}
+
+#tasks-header:hover .arrow { 
+  fill: #008ce3;
+}
+
+#add-task {
+  border-bottom: 1px solid #e0e6e8;
+  display: flex;
+  min-height: 35px;
+  flex-direction: column;
+  padding-bottom: 15px;
+}
+
+#add-task button {
+	width: 80px;
+	margin: auto 0;
+}
+
+#add-task form {
+	padding-top: 10px;
+}

@@ -1,19 +1,14 @@
 body {
-  width:500px;
-  margin:auto;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  padding-bottom: 200px;
+	margin: 0;
 }
 
 a {
-  color: darkred;
+  color: #008ce3;
   text-decoration: none;
 }
 
 .submit-button {
-  background: #CC0000;
+  background: #008ce3;
   color: #FFFFFF;
   cursor: pointer;
   border: 0;
@@ -32,4 +27,3 @@ a {
   padding-top: 10px;
   border-bottom: solid 1px #ccc;
 }
-

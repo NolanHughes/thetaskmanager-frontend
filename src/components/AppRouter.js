@@ -6,11 +6,12 @@ import Appointment from './Appointment';
 import AppHeader from './AppHeader';
 import AppointmentForm from './AppointmentForm';
 import Login from './Login'
+import '../css/App.css'
 
 export default (props) => {
 	return(
 		<Router> 
-			<div>
+			<div className="app">
 				<Route exact path="/" component={AppHeader}/>
 				<Route exact path="/" component={Appointments} />
 				<Route path="/login" component={Login} />
