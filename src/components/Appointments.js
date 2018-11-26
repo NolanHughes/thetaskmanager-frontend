@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import $ from 'jquery';
 
 import AppointmentForm from './AppointmentForm';
 import { AppointmentsList } from './AppointmentsList';
-
-import $ from 'jquery';
 
 export default class Appointments extends React.Component {
   constructor (props, railsContext) {
@@ -23,24 +22,12 @@ export default class Appointments extends React.Component {
   }
 
   componentDidMount() {
-    // if(this.props.match && sessionStorage.user) {
-    //   fetch('http://localhost:3001/api/v1/appointments', {
-    //     headers: JSON.parse(sessionStorage.user)
-    //   })
-    //   .then(res => res.json())
-    //   .then(json => {
-    //     this.setState({
-    //       appointments: json
-    //     })        
-    //   })
-    // }
-    debugger
     if(this.props.match && sessionStorage.user) {
       $.ajax({
         type: "GET",
         url: 'http://localhost:3001/api/v1/appointments',
         dataType: "JSON",
-        headers: JSON.parse(sessionStorage.user)
+        headers: JSON.parse(sessionStorage.getItem('user'))
       }).done((data) => {
         this.setState({appointments: data});
       });

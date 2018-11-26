@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom'
+import $ from 'jquery'
 
 import {formatDate} from '../utils/format';
 
@@ -14,15 +15,16 @@ export default class Appointment extends React.Component {
   }
 
   componentDidMount() {
-  	if(this.props.match) {
-  		fetch(`http://localhost:3001/api/v1/appointments/${this.props.match.params.id}`)
-  		.then(res => res.json())
-  		.then(json => {
-	  		this.setState({
-	  			appointment: json
-	  		})  			
-  		})
-	  }
+	  if(this.props.match) {
+      $.ajax({
+        type: "GET",
+        url: `http://localhost:3001/api/v1/appointments/${this.props.match.params.id}`,
+        dataType: "JSON",
+        headers: JSON.parse(sessionStorage.getItem('user'))
+      }).done((data) => {
+        this.setState({appointment: data});
+      });
+    }
   }
 
   static propTypes = {

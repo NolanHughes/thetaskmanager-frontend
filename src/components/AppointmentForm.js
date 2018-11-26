@@ -4,6 +4,7 @@ import Datetime from 'react-datetime';
 import moment from 'moment';
 import update from 'immutability-helper';
 import './react-datetime.css';
+import $ from 'jquery'
 
 import { validations } from '../utils/validations';
 import { FormErrors } from './FormErrors';
@@ -36,15 +37,18 @@ export default class AppointmentForm extends React.Component {
 
   componentDidMount() {
     if(this.props.match) {
-      fetch(`http://localhost:3001/api/v1/appointments/${this.props.match.params.id}`)
-      .then(res => res.json())
-      .then(json => {
+      $.ajax({
+        type: "GET",
+        url: `http://localhost:3001/api/v1/appointments/${this.props.match.params.id}`,
+        dataType: "JSON",
+        headers: JSON.parse(sessionStorage.getItem('user'))
+      }).done((data) => {
         this.setState({
-          title: { value: json.title, valid: true },
-          appt_time: { value: json.appt_time, valid: true },
-          editing: this.props.match.path === '/appointments/:id/edit'
-        })        
-      })
+                        title: {value: data.title, valid: true},
+                        appt_time: {value: data.appt_time, valid: true},
+                        editing: this.props.match.path === '/appointments/:id/edit'
+        });
+      });
     }
   }
 
@@ -89,88 +93,67 @@ export default class AppointmentForm extends React.Component {
     this.state.editing ? this.updateAppointment() : this.addAppointment()
   }
 
-  async addAppointment() {
+  addAppointment() {
     const appointment = {
       title: this.state.title.value, 
       appt_time: this.state.appt_time.value
     };
 
-    try {
-      // const response = await fetch('http://localhost:3001/api/v1/appointments', {
-      //   method: 'POST',
-      //   body: JSON.stringify(appointment),
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': JSON.parse(sessionStorage.user)
-      //   }
-      // })
-      // var bearer = 'Bearer '+ bearer_token;
-      const response = await fetch('http://localhost:3001/api/v1/appointments', {
-      method: 'POST',
-      body: JSON.stringify(appointment),
-      withCredentials: true,
-      credentials: 'include',
-      headers: {
-          'Authorization': sessionStorage.user,
-          'Content-Type': 'application/json'}
-      })
-
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
-      const json = await response.json()
-      
-      this.props.handleNewAppointment(json);
-      this.resetFormErrors();      
-    } catch(error) {
-        console.log(error)
-        this.setState({
-          formErrors: error,
-          formValid: false
-        });
-    }  
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:3001/api/v1/appointments',
+      data: {appointment: appointment},
+      headers: JSON.parse(sessionStorage.getItem('user'))
+    })
+    .done((data) => {
+      this.props.handleNewAppointment(data);
+      this.resetFormErrors();
+    })
+    .fail((response) => {
+      this.setState({
+        formErrors: response.responseJSON,
+        formValid: false
+      });
+    });
   }
 
-  async updateAppointment() {
+  updateAppointment() {
     const appointment = {
       title: this.state.title.value,
       appt_time: this.state.appt_time.value
     };
-
-    try {
-      const response = await fetch(`http://localhost:3001/api/v1/appointments/${this.props.match.params.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(appointment),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
-      console.log('Appointment updated')
-      this.resetFormErrors();
-    } catch(error) {
-        console.log(error)
-        this.setState({
-          formErrors: error,
-          formValid: false
-        });
-    }   
+    
+    $.ajax({
+      type: "PATCH",
+      url: `http://localhost:3001/api/v1/appointments/${this.props.match.params.id}`,
+      data: {appointment: appointment},
+      headers: JSON.parse(sessionStorage.getItem('user'))
+    })
+    .done((data) => {
+      alert('appointment updated!');
+      this.props.history.push('/');
+    })
+    .fail((response) => {
+      this.setState({
+        formErrors: response.responseJSON,
+        formValid: false
+      });
+    });  
   }
 
   deleteAppointment = () => {
-    if(window.confirm("Are you sure you want to delete this appointment?")){
-      fetch(`http://localhost:3001/api/v1/appointments/${this.props.match.params.id}`, {
-        method: 'DELETE'
+    if(window.confirm("Are you sure you want to delete this appointment?")) {
+      $.ajax({
+        type: "DELETE",
+        url: `http://localhost:3001/api/v1/appointments/${this.props.match.params.id}`,
+        headers: JSON.parse(sessionStorage.getItem('user'))
       })
-      .then(res => {
-        this.props.history.push('/')
+      .done((data) => {
+        this.props.history.push('/');
       })
-      .catch(error => {
-        console.log(error)
-      })
+      .fail((response) => {
+        console.log('appointment deleting failed!');
+      });
     }
   }
 
