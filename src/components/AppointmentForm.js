@@ -187,15 +187,15 @@ export default class AppointmentForm extends React.Component {
     };
 
     return (
-      <div>
+      <div id="add-task">
         <h2>
           {this.state.editing ?
-            'Update appointment' :
-            'Make a new appointment' }
+            'Update task' :
+            'Make a new task' }
          </h2>
         <FormErrors formErrors = {this.state.formErrors} />
         <form onSubmit={this.handleFormSubmit}>
-          <input name='title' placeholder='Appointment Title'
+          <input name='title' placeholder='Task Title'
             value={this.state.title.value}
             onChange={this.handleChange} />
 
@@ -205,15 +205,15 @@ export default class AppointmentForm extends React.Component {
 
           <input type='submit'
             value={this.state.editing ?
-                    'Update Appointment' :
-                    'Make Appointment'}
+                    'Update Task' :
+                    'Make Task'}
             className='submit-button'
             disabled={!this.state.formValid} />
         </form>
         {this.state.editing && (
           <p>
             <button onClick={this.deleteAppointment}>
-              Delete appointment
+              Delete task
             </button>
           </p>
         )}

@@ -12,7 +12,7 @@ export default (props) => {
 	return(
 		<Router> 
 			<div className="app">
-				<Route exact path="/" component={AppHeader}/>
+				<Route path="/" component={AppHeader}/>
 				<Route exact path="/" component={Appointments} />
 				<Route path="/login" component={Login} />
 				<Route exact path="/appointments/:id" component={Appointment} />

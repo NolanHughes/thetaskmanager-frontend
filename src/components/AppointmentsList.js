@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Appointment from './Appointment'
 
 export const AppointmentsList = ({appointments}) => 
-  <div>
+  <div id="task-list">
     {appointments.map(function(appointment) {
       return (
         <Appointment appointment={appointment} key={appointment.id} />

@@ -4,6 +4,9 @@ import $ from 'jquery';
 
 import AppointmentForm from './AppointmentForm';
 import { AppointmentsList } from './AppointmentsList';
+import { TaskHeader } from './TaskHeader';
+
+import '../css/Tasks.css'
 
 export default class Appointments extends React.Component {
   constructor (props, railsContext) {
@@ -44,11 +47,32 @@ export default class Appointments extends React.Component {
     });
   }
 
+  handleHeaderClick = () => {
+    const taskList = document.getElementById("task-list")
+    const downArrow = document.getElementById("downArrow")
+    const rightArrow = document.getElementById("rightArrow") 
+
+    if(taskList.style.display !== "none") {
+      taskList.style.display = "none"
+      downArrow.style.display = "none"
+      rightArrow.style.display = "inline-flex"
+    } else {
+      taskList.style.display = "block"
+      downArrow.style.display = "inline-flex"
+      rightArrow.style.display = "none"
+    }
+  }
+
   render () {
     return (
-      <div>
-        <AppointmentForm handleNewAppointment={this.addNewAppointment} />
-        <AppointmentsList appointments={this.state.appointments} />
+      <div className="container">
+        <div className="tasks">
+          <AppointmentForm handleNewAppointment={this.addNewAppointment} />
+
+          <TaskHeader handleHeaderClick={this.handleHeaderClick}/>
+
+          <AppointmentsList appointments={this.state.appointments} />
+        </div>
       </div>
     )
   }

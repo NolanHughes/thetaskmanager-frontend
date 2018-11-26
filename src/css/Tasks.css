@@ -1,3 +1,14 @@
+/*.app-body {
+	width: 80vw;
+	margin: 0 auto;
+	display: grid;
+  grid-template-columns: auto;
+}*/
+
+/*.app-body > * {
+	margin: 0 auto;
+}*/
+
 .container {
 	display: flex;
   justify-content: center;

@@ -32,10 +32,10 @@ export default class AppHeader extends React.Component {
 	}
 
 	render () {
-		let userEmail = JSON.parse(sessionStorage.getItem('user')).uid
-		let userId = userEmail.substring(0, userEmail.indexOf("@"))
-
 		if(sessionStorage.getItem('user')) {
+			let userEmail = JSON.parse(sessionStorage.getItem('user')).uid
+			let userId = userEmail.substring(0, userEmail.indexOf("@"))
+			
 			return (
 				<div className="Navbar">       
 			    <nav className="Navbar__Items Navbar__Items--left">
