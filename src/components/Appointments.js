@@ -4,7 +4,7 @@ import $ from 'jquery';
 
 import AppointmentForm from './AppointmentForm';
 import { AppointmentsList } from './AppointmentsList';
-import { TaskHeader } from './TaskHeader';
+import { TasksHeader } from './TasksHeader';
 
 import '../css/Tasks.css'
 
@@ -69,7 +69,7 @@ export default class Appointments extends React.Component {
         <div className="tasks">
           <AppointmentForm handleNewAppointment={this.addNewAppointment} />
 
-          <TaskHeader handleHeaderClick={this.handleHeaderClick}/>
+          <TasksHeader handleHeaderClick={this.handleHeaderClick} />
 
           <AppointmentsList appointments={this.state.appointments} />
         </div>

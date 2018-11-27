@@ -2,7 +2,7 @@ import React from 'react';
 
 import '../css/Tasks.css'
 
-export const TaskHeader = ({handleHeaderClick}) =>
+export const TasksHeader = ({handleHeaderClick}) =>
 	<div>
     <span id="tasks-header" onClick={() => handleHeaderClick()}>
       <div className="TaskGroupHeader-arrow">

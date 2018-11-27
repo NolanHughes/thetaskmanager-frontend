@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Datetime from 'react-datetime';
 import moment from 'moment';
 import update from 'immutability-helper';
-import './react-datetime.css';
+import '../css/react-datetime.css';
 import $ from 'jquery'
 
 import { validations } from '../utils/validations';
