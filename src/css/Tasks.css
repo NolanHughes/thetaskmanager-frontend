@@ -11,12 +11,27 @@
 	padding: 15px;
 }
 
-.task-form {
+.task-form-container {
 	margin-left: 15px;
 	flex: 0 1 30vw;
 	background-color: white;
 	box-shadow: 0 1px 3px 0 rgba(0,0,0,0.15);
 	padding: 15px;
+}
+
+#task-form {
+	display: grid;
+}
+
+.datetime {
+	margin: 0 auto;
+}
+
+#task-title {
+	width: 100%;
+	padding: 5px;
+  font-size: 1.5em;
+  box-sizing: border-box;
 }
 
 .tasks svg {

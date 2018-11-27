@@ -188,11 +188,11 @@ export default class TaskDetailsForm extends React.Component {
     };
 
 		return(
-			<div className="task-form">
+			<div className="task-form-container">
 				<FormErrors formErrors = {this.state.formErrors} />
 
-	      <form onSubmit={this.handleFormSubmit}>
-	        <input name='title' placeholder='Task Title'
+	      <form onSubmit={this.handleFormSubmit} id="task-form">
+	        <input name='title' id="task-title" placeholder='Task Title'
 	          value={this.state.title.value}
 	          onChange={this.handleChange} />
 
@@ -201,7 +201,8 @@ export default class TaskDetailsForm extends React.Component {
 	         	open={true} 
 	         	inputProps={inputProps}
             value={moment(this.state.appt_time.value)}
-            onChange={this.setApptTime} />
+            onChange={this.setApptTime} 
+            className="datetime" />
 
 	        <input type='submit'
 	          value={this.state.editing ? 'Update Task' : 'Make Task'}
