@@ -39,7 +39,7 @@ export default class Appointment extends React.Component {
 		return(
 		  <div className='appointment'>
 		  	<Link to={`/appointments/${this.state.appointment.id}`}>
-		    	<h3>{this.state.appointment.title}</h3>
+		    	{this.state.appointment.title}
 		    </Link>
 		   	<p>{formatDate(this.state.appointment.appt_time)}</p>
 		   	<Link to={`/appointments/${this.state.appointment.id}/edit`} >

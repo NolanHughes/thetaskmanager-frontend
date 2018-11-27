@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 
-import AppointmentForm from './AppointmentForm';
 import { AppointmentsList } from './AppointmentsList';
 import { TasksHeader } from './TasksHeader';
+import TaskDetailsForm from './TaskDetailsForm'
 
 import '../css/Tasks.css'
 
@@ -67,12 +67,17 @@ export default class Appointments extends React.Component {
     return (
       <div className="container">
         <div className="tasks">
-          <AppointmentForm handleNewAppointment={this.addNewAppointment} />
+          <div id="add-task">
+            <button /*this.handleAddTaskClick*/>Add task</button>
+          </div>
 
           <TasksHeader handleHeaderClick={this.handleHeaderClick} />
 
           <AppointmentsList appointments={this.state.appointments} />
+          
         </div>
+
+        <TaskDetailsForm handleNewAppointment={this.addNewAppointment} />
       </div>
     )
   }
