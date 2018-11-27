@@ -12,7 +12,8 @@ export default class Appointments extends React.Component {
   constructor (props, railsContext) {
     super(props)
     this.state = {
-      appointments: this.props.appointments
+      appointments: this.props.appointments,
+      taskFormOpen: false
     }
   }
 
@@ -63,12 +64,25 @@ export default class Appointments extends React.Component {
     }
   }
 
+  handleAddTaskClick = () => {
+    this.setState({
+      taskFormOpen: !this.state.taskFormOpen
+    })
+  }
+
   render () {
+    let taskForm 
+
+    if (this.state.taskFormOpen) {
+      taskForm = <TaskDetailsForm handleNewAppointment={this.addNewAppointment} />
+    } else {
+      taskForm = <div id="task-details-form"></div>
+    }
     return (
       <div className="container">
         <div className="tasks">
           <div id="add-task">
-            <button /*this.handleAddTaskClick*/>Add task</button>
+            <button onClick={() => this.handleAddTaskClick()}>Add task</button>
           </div>
 
           <TasksHeader handleHeaderClick={this.handleHeaderClick} />
@@ -76,8 +90,7 @@ export default class Appointments extends React.Component {
           <AppointmentsList appointments={this.state.appointments} />
           
         </div>
-
-        <TaskDetailsForm handleNewAppointment={this.addNewAppointment} />
+        {taskForm}
       </div>
     )
   }
