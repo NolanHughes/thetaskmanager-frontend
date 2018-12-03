@@ -30,28 +30,41 @@ export default class Appointments extends React.Component {
     appointments: []
   }
 
-
-
   handleAppointment = (appointment) => {
     let appointments = this.state.appointments
-    let appt = appointments.find(a => a.id === appointment.id);
 
-    if (appt) {
-      appt.appt_time = appointment.appt_time
-      appt.title = appointment.title
+    if (typeof appointment === 'object' && appointment !== null) {      
+      let appt = appointments.find(a => a.id === appointment.id);
+  
+      if (appt) {
+        appt.appt_time = appointment.appt_time
+        appt.title = appointment.title
+      } else {
+        appointments = [...this.state.appointments, appointment]
+      }
+
+      const sortedAppointments = appointments.sort(function(a,b){
+        return new Date(a.appt_time) - new Date(b.appt_time);
+      })
+        
+      this.setState({
+        appointments: sortedAppointments,
+        appointmentId: null,
+        editing: false
+      });
     } else {
-      appointments = [...this.state.appointments, appointment]
-    }
+      let id = appointment
 
-    const sortedAppointments = appointments.sort(function(a,b){
-      return new Date(a.appt_time) - new Date(b.appt_time);
-    })
-      
-    this.setState({
-      appointments: sortedAppointments,
-      appointmentId: null,
-      editing: false
-    });
+      let index = appointments.map(x => {
+        return x.id;
+      }).indexOf(id);
+
+      appointments.splice(index, 1);
+  
+      this.setState({
+        appointments: appointments
+      })  
+    }
 
     this.handleFormUnmount()
   }

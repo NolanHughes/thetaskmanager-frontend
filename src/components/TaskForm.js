@@ -139,14 +139,16 @@ export default class TaskForm extends React.Component {
   }
 
   deleteAppointment = () => {
+    const id  = this.props.id
     if(window.confirm("Are you sure you want to delete this appointment?")) {
       $.ajax({
         type: "DELETE",
-        url: `http://localhost:3001/api/v1/appointments/${this.props.id}`,
+        url: `http://localhost:3001/api/v1/appointments/${id}`,
         headers: JSON.parse(sessionStorage.getItem('user'))
       })
-      .done((data) => {
+      .done(() => {
         console.log('deleted')
+        this.props.handleAppointment(id);
       })
       .fail((response) => {
         console.log('appointment deleting failed!');
