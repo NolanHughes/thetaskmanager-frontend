@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom'
-import $ from 'jquery'
 
 import {formatDate} from '../utils/format';
 
@@ -14,19 +12,6 @@ export default class Appointment extends React.Component {
   	}
   }
 
-  componentDidMount() {
-	  if(this.props.match) {
-      $.ajax({
-        type: "GET",
-        url: `http://localhost:3001/api/v1/appointments/${this.props.match.params.id}`,
-        dataType: "JSON",
-        headers: JSON.parse(sessionStorage.getItem('user'))
-      }).done((data) => {
-        this.setState({appointment: data});
-      });
-    }
-  }
-
   static propTypes = {
 		appointment: PropTypes.object.isRequired
 	}
@@ -35,16 +20,19 @@ export default class Appointment extends React.Component {
 		appointment: {}
 	}
 
+	handleEditClick = (id) => {
+		this.props.openTaskForm(id)
+	}
+
 	render() {
+
 		return(
 		  <div className='appointment'>
-		  	<Link to={`/appointments/${this.state.appointment.id}`}>
-		    	{this.state.appointment.title}
-		    </Link>
+		    <span>{this.state.appointment.title}</span>
 		   	<p>{formatDate(this.state.appointment.appt_time)}</p>
-		   	<Link to={`/appointments/${this.state.appointment.id}/edit`} >
-		   		Edit
-		   	</Link>
+		   	<button onClick={() => this.handleEditClick(this.state.appointment.id)}>
+		   		Edit inline
+		   	</button>
 		  </div>
 	  )
 	}

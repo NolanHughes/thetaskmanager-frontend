@@ -1,0 +1,2 @@
+1. Two problems. performing state update on unmounted component after adding new task. Editing inline works fine but adding new task after editing inline populates most recent task instead of a blank slate. Need to clear out task form after updating.
+2. Might be some other shannanagins going on as well with update.

@@ -4,7 +4,7 @@ import $ from 'jquery';
 
 import { AppointmentsList } from './AppointmentsList';
 import { TasksHeader } from './TasksHeader';
-import TaskDetailsForm from './TaskDetailsForm'
+import TaskForm from './TaskForm'
 
 import '../css/Tasks.css'
 
@@ -13,8 +13,13 @@ export default class Appointments extends React.Component {
     super(props)
     this.state = {
       appointments: this.props.appointments,
-      taskFormOpen: false
+      editing: false,
+      appointmentId: null,
+      renderForm: false
     }
+    
+    this.handleFormUnmount = this.handleFormUnmount.bind(this);
+    this.handleFormMount = this.handleFormMount.bind(this);
   }
 
   static propTypes = {
@@ -25,8 +30,55 @@ export default class Appointments extends React.Component {
     appointments: []
   }
 
+
+
+  handleAppointment = (appointment) => {
+    let appointments = this.state.appointments
+    let appt = appointments.find(a => a.id === appointment.id);
+
+    if (appt) {
+      appt.appt_time = appointment.appt_time
+      appt.title = appointment.title
+    } else {
+      appointments = [...this.state.appointments, appointment]
+    }
+
+    const sortedAppointments = appointments.sort(function(a,b){
+      return new Date(a.appt_time) - new Date(b.appt_time);
+    })
+      
+    this.setState({
+      appointments: sortedAppointments,
+      appointmentId: null,
+      editing: false
+    });
+
+    this.handleFormUnmount()
+  }
+
+  handleFormUnmount(){      
+    this.setState({
+      renderForm: false
+    });
+  }
+
+
+  handleFormMount = (id) => {
+    if(id) {
+      this.setState({
+        renderForm: true,
+        editing: true,
+        appointmentId: id
+      })
+    } else {
+      this.setState({
+        renderForm: true
+      })
+    }
+  }
+
   componentDidMount() {
-    if(this.props.match && sessionStorage.user) {
+    if(sessionStorage.user) {
       $.ajax({
         type: "GET",
         url: 'http://localhost:3001/api/v1/appointments',
@@ -38,15 +90,6 @@ export default class Appointments extends React.Component {
     }
   }
 
-  addNewAppointment = (appointment) => {
-    const sortedAppointments = [...this.state.appointments, appointment].sort(function(a,b){
-        return new Date(a.appt_time) - new Date(b.appt_time);
-      })
-
-    this.setState({
-      appointments: sortedAppointments
-    });
-  }
 
   handleHeaderClick = () => {
     const taskList = document.getElementById("task-list")
@@ -64,34 +107,22 @@ export default class Appointments extends React.Component {
     }
   }
 
-  handleAddTaskClick = () => {
-    this.setState({
-      taskFormOpen: !this.state.taskFormOpen
-    })
-  }
-
   render () {
-    let taskForm 
-
-    if (this.state.taskFormOpen) {
-      taskForm = <TaskDetailsForm handleNewAppointment={this.addNewAppointment} />
-    } else {
-      taskForm = <div id="task-details-form"></div>
-    }
     return (
-      <div className="container">
-        <div className="tasks">
-          <div id="add-task">
-            <button onClick={() => this.handleAddTaskClick()}>Add task</button>
+      <React.Fragment>
+        <div className="container">
+          <div className="tasks">
+            <div id="add-task">
+              <button onClick={() => this.handleFormMount()}>Add task</button>
+            </div>
+
+            <TasksHeader handleHeaderClick={this.handleHeaderClick} />
+
+            <AppointmentsList appointments={this.state.appointments} openTaskForm={this.handleFormMount}/>
           </div>
-
-          <TasksHeader handleHeaderClick={this.handleHeaderClick} />
-
-          <AppointmentsList appointments={this.state.appointments} />
-          
+          {this.state.renderForm ? <TaskForm handleAppointment={this.handleAppointment} updateAppointment={this.handleAppointment} editing={this.state.editing} id={this.state.appointmentId}/> : null}
         </div>
-        {taskForm}
-      </div>
+      </React.Fragment>
     )
   }
 }

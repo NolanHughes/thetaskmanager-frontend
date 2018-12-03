@@ -3,13 +3,11 @@ import PropTypes from 'prop-types';
 
 import Appointment from './Appointment'
 
-export const AppointmentsList = ({appointments}) => 
+export const AppointmentsList = ({appointments, openTaskForm}) => 
   <div id="task-list">
-    {appointments.map(function(appointment) {
-      return (
-        <Appointment appointment={appointment} key={appointment.id} />
-      )
-    })}
+    {appointments.map(appointment => (
+      <Appointment appointment={appointment} key={appointment.id} openTaskForm={openTaskForm}/>
+    ))}
   </div>
 
 AppointmentsList.propTypes = {

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types'
 import Datetime from 'react-datetime';
 import moment from 'moment';
 import update from 'immutability-helper';
@@ -11,7 +10,7 @@ import { FormErrors } from './FormErrors';
 
 import '../css/Tasks.css'
 
-export default class TaskDetailsForm extends React.Component {
+export default class TaskForm extends React.Component {
   constructor (props, railsContext) {
     super(props)
     this.state = {
@@ -19,12 +18,8 @@ export default class TaskDetailsForm extends React.Component {
       appt_time: {value: new Date(), valid: false},
       formErrors: {},
       formValid: false,
-      editing: false
+      editing: props.editing
     }
-  }
-
-  static propTypes = {
-    handleNewAppointment: PropTypes.func
   }
 
   static formValidations = {
@@ -36,18 +31,17 @@ export default class TaskDetailsForm extends React.Component {
     ]
   }
 
-  componentDidMount() {
-    if(this.props.match) {
+  componentDidMount() {    
+    if(this.props.editing) {
       $.ajax({
         type: "GET",
-        url: `http://localhost:3001/api/v1/appointments/${this.props.match.params.id}`,
+        url: `http://localhost:3001/api/v1/appointments/${this.props.id}`,
         dataType: "JSON",
         headers: JSON.parse(sessionStorage.getItem('user'))
       }).done((data) => {
         this.setState({
-                        title: {value: data.title, valid: true},
-                        appt_time: {value: data.appt_time, valid: true},
-                        editing: this.props.match.path === '/appointments/:id/edit'
+          title: {value: data.title, valid: true},
+          appt_time: {value: data.appt_time, valid: true}
         });
       });
     }
@@ -107,8 +101,8 @@ export default class TaskDetailsForm extends React.Component {
       headers: JSON.parse(sessionStorage.getItem('user'))
     })
     .done((data) => {
-      this.props.handleNewAppointment(data);
       this.resetFormErrors();
+      this.props.handleAppointment(data);      
     })
     .fail((response) => {
       this.setState({
@@ -126,13 +120,15 @@ export default class TaskDetailsForm extends React.Component {
     
     $.ajax({
       type: "PATCH",
-      url: `http://localhost:3001/api/v1/appointments/${this.props.match.params.id}`,
+      url: `http://localhost:3001/api/v1/appointments/${this.props.id}`,
       data: {appointment: appointment},
       headers: JSON.parse(sessionStorage.getItem('user'))
     })
     .done((data) => {
-      alert('appointment updated!');
-      this.props.history.push('/');
+      this.setState({
+        editing: false
+      })
+      this.props.handleAppointment(data);
     })
     .fail((response) => {
       this.setState({
@@ -146,11 +142,11 @@ export default class TaskDetailsForm extends React.Component {
     if(window.confirm("Are you sure you want to delete this appointment?")) {
       $.ajax({
         type: "DELETE",
-        url: `http://localhost:3001/api/v1/appointments/${this.props.match.params.id}`,
+        url: `http://localhost:3001/api/v1/appointments/${this.props.id}`,
         headers: JSON.parse(sessionStorage.getItem('user'))
       })
       .done((data) => {
-        this.props.history.push('/');
+        console.log('deleted')
       })
       .fail((response) => {
         console.log('appointment deleting failed!');
@@ -168,7 +164,7 @@ export default class TaskDetailsForm extends React.Component {
     this.handleUserInput(
       fieldName, 
       fieldValue,
-      TaskDetailsForm.formValidations[fieldName]
+      TaskForm.formValidations[fieldName]
     );
   }
 
@@ -178,7 +174,7 @@ export default class TaskDetailsForm extends React.Component {
     this.handleUserInput(
       fieldName, 
       fieldValue,
-      TaskDetailsForm.formValidations[fieldName]
+      TaskForm.formValidations[fieldName]
     );
   }
 
@@ -218,6 +214,6 @@ export default class TaskDetailsForm extends React.Component {
 	        </p>
 	      )}
       </div>
-		)
+		)    
 	}
 }
