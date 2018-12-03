@@ -31,7 +31,7 @@ export default class TaskForm extends React.Component {
     ]
   }
 
-  componentDidMount() {    
+  componentDidMount() {  
     if(this.props.editing) {
       $.ajax({
         type: "GET",

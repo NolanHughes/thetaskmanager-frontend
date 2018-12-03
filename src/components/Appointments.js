@@ -48,9 +48,7 @@ export default class Appointments extends React.Component {
       })
         
       this.setState({
-        appointments: sortedAppointments,
-        appointmentId: null,
-        editing: false
+        appointments: sortedAppointments
       });
     } else {
       let id = appointment
@@ -71,22 +69,44 @@ export default class Appointments extends React.Component {
 
   handleFormUnmount(){      
     this.setState({
-      renderForm: false
+      renderForm: false,
+      appointmentId: null,
+      editing: false
     });
   }
 
 
   handleFormMount = (id) => {
-    if(id) {
-      this.setState({
-        renderForm: true,
-        editing: true,
-        appointmentId: id
-      })
+    if (this.state.renderForm === false) {
+      if (id) {
+        this.setState({
+          renderForm: true,
+          editing: true,
+          appointmentId: id
+        })
+      } else {
+        this.setState({
+          renderForm: true
+        })
+      }
     } else {
-      this.setState({
-        renderForm: true
-      })
+      if(id === this.state.appointmentId) {
+        alert("You're already editing that task")
+      } else if (id === undefined) {
+        if (window.confirm("Are you sure you want to add a new task before saving this appointment?")) {
+          this.setState({
+            editing: false,
+            appointmentId: null
+          })
+        }
+      } else {
+        if (window.confirm("Are you sure you want to edit this task before saving your appointment?")) {
+          this.setState({
+            appointmentId: id,
+            editing: true
+          })
+        }
+      }
     }
   }
 
@@ -133,7 +153,7 @@ export default class Appointments extends React.Component {
 
             <AppointmentsList appointments={this.state.appointments} openTaskForm={this.handleFormMount} handleAppointment={this.handleAppointment}/>
           </div>
-          {this.state.renderForm ? <TaskForm handleAppointment={this.handleAppointment} updateAppointment={this.handleAppointment} editing={this.state.editing} id={this.state.appointmentId}/> : null}
+          {this.state.renderForm ? <TaskForm key={this.state.appointmentId} handleAppointment={this.handleAppointment} updateAppointment={this.handleAppointment} editing={this.state.editing} id={this.state.appointmentId}/> : null}
         </div>
       </React.Fragment>
     )
