@@ -5,6 +5,7 @@ import Appointments from './Appointments';
 import AppHeader from './AppHeader';
 import TaskForm from './TaskForm';
 import Login from './Login'
+import Signup from './Signup'
 import '../css/App.css'
 
 export default (props) => {
@@ -14,6 +15,7 @@ export default (props) => {
 				<Route path="/" component={AppHeader}/>
 				<Route exact path="/" component={Appointments} />
 				<Route path="/login" component={Login} />
+				<Route path="/signup" component={Signup} />
 				<Route path="/appointments/:id/edit" component={TaskForm} />
 			</div>
 		</Router>

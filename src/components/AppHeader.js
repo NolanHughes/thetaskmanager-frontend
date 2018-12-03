@@ -1,21 +1,22 @@
 import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import $ from 'jquery';
 
 import '../css/Navbar.css'
 
 export default class AppHeader extends React.Component { 
 	componentDidMount () {
-		$.ajax({
-			type: 'GET',
-			url: 'http://localhost:3001/auth/validate_token',
-      dataType: "JSON",
-      headers: JSON.parse(sessionStorage.getItem('user'))
-		})
-		.fail((data) => {
-			debugger
-			this.props.history.push('/login');
-		})
+		if (sessionStorage.user) {
+			$.ajax({
+				type: 'GET',
+				url: 'http://localhost:3001/auth/validate_token',
+	      dataType: "JSON",
+	      headers: JSON.parse(sessionStorage.getItem('user'))
+			})
+			.fail((data) => {
+				this.props.history.push('/login');
+			})
+		}
 	}
 
 	handleSignOut = (e) => {
@@ -61,7 +62,7 @@ export default class AppHeader extends React.Component {
 			)
 		} else {
 			return (
-				<Redirect to='/login' />
+				null
 			)
 		}
 	}
