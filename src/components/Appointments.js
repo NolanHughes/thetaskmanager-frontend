@@ -131,7 +131,7 @@ export default class Appointments extends React.Component {
 
             <TasksHeader handleHeaderClick={this.handleHeaderClick} />
 
-            <AppointmentsList appointments={this.state.appointments} openTaskForm={this.handleFormMount}/>
+            <AppointmentsList appointments={this.state.appointments} openTaskForm={this.handleFormMount} handleAppointment={this.handleAppointment}/>
           </div>
           {this.state.renderForm ? <TaskForm handleAppointment={this.handleAppointment} updateAppointment={this.handleAppointment} editing={this.state.editing} id={this.state.appointmentId}/> : null}
         </div>

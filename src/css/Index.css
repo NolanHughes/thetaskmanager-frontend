@@ -27,6 +27,6 @@ a {
   padding-top: 10px;
   border-bottom: solid 1px #ccc;
   display: grid;
-  grid-template-columns: 33% 33% 33%;
+  grid-template-columns: 25% 25% 25% 25%;
   align-items: center;
 }
