@@ -30,8 +30,8 @@ export default class Login extends React.Component {
       <div>
         <h2>Sign in</h2>
         <form onSubmit={this.handleLogin} >
-          <input name="email" placeholder="Email" ref={(input) => this.email = input} />
-          <input name="password" placeholder="Password" type="password" ref = {(input) => this.password = input} />
+          <input name="email" placeholder="Email" autoComplete="username" ref={(input) => this.email = input} />
+          <input name="password" placeholder="Password" type="password" autoComplete="current-password" ref = {(input) => this.password = input} />
           <input type="submit"/>
         </form>
       </div>

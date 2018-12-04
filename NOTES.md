@@ -1,4 +1,4 @@
-- Expand and rename appointments so that collaboration between users can happen.
+- Expand and rename appointments in backend so that collaboration between users can happen.
 - Need error message to display when log in credentials are invalid.
 - Fix edge cases with delete and edit buttons.
 - Refactor
