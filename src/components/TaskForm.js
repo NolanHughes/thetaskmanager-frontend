@@ -15,7 +15,7 @@ export default class TaskForm extends React.Component {
     super(props)
     this.state = {
       title: {value: '', valid: false},
-      appt_time: {value: new Date(), valid: false},
+      due_by: {value: new Date(), valid: false},
       formErrors: {},
       formValid: false,
       editing: props.editing
@@ -26,7 +26,7 @@ export default class TaskForm extends React.Component {
     title: [
       (string) => { return(validations.checkMinLength(string, 1)) }
     ],
-    appt_time: [
+    due_by: [
       (time) => { return(validations.timeShouldBeFuture(time)) }
     ]
   }
@@ -35,13 +35,13 @@ export default class TaskForm extends React.Component {
     if(this.props.editing) {
       $.ajax({
         type: "GET",
-        url: `http://localhost:3001/api/v1/appointments/${this.props.id}`,
+        url: `http://localhost:3001/api/v1/tasks/${this.props.id}`,
         dataType: "JSON",
         headers: JSON.parse(sessionStorage.getItem('user'))
       }).done((data) => {
         this.setState({
           title: {value: data.title, valid: true},
-          appt_time: {value: data.appt_time, valid: true}
+          due_by: {value: data.due_by, valid: true}
         });
       });
     }
@@ -78,7 +78,7 @@ export default class TaskForm extends React.Component {
 
   validateForm () {
     this.setState({
-      formValid: this.state.title.valid && this.state.appt_time.valid
+      formValid: this.state.title.valid && this.state.due_by.valid
     });
   }
 
@@ -89,15 +89,15 @@ export default class TaskForm extends React.Component {
   }
 
   addTask() {
-    const appointment = {
+    const task = {
       title: this.state.title.value, 
-      appt_time: this.state.appt_time.value
+      due_by: this.state.due_by.value
     };
 
     $.ajax({
       type: 'POST',
-      url: 'http://localhost:3001/api/v1/appointments',
-      data: {appointment: appointment},
+      url: 'http://localhost:3001/api/v1/tasks',
+      data: {task: task},
       headers: JSON.parse(sessionStorage.getItem('user'))
     })
     .done((data) => {
@@ -113,15 +113,15 @@ export default class TaskForm extends React.Component {
   }
 
   updateTask() {
-    const appointment = {
+    const task = {
       title: this.state.title.value,
-      appt_time: this.state.appt_time.value
+      due_by: this.state.due_by.value
     };
     
     $.ajax({
       type: "PATCH",
-      url: `http://localhost:3001/api/v1/appointments/${this.props.id}`,
-      data: {appointment: appointment},
+      url: `http://localhost:3001/api/v1/tasks/${this.props.id}`,
+      data: {task: task},
       headers: JSON.parse(sessionStorage.getItem('user'))
     })
     .done((data) => {
@@ -143,7 +143,7 @@ export default class TaskForm extends React.Component {
     if(window.confirm("Are you sure you want to delete this task?")) {
       $.ajax({
         type: "DELETE",
-        url: `http://localhost:3001/api/v1/appointments/${id}`,
+        url: `http://localhost:3001/api/v1/tasks/${id}`,
         headers: JSON.parse(sessionStorage.getItem('user'))
       })
       .done(() => {
@@ -170,8 +170,8 @@ export default class TaskForm extends React.Component {
     );
   }
 
-  setApptTime = (e) => {
-    const fieldName = 'appt_time';
+  setDueBy = (e) => {
+    const fieldName = 'due_by';
     const fieldValue = e.toDate();
     this.handleUserInput(
       fieldName, 
@@ -182,7 +182,7 @@ export default class TaskForm extends React.Component {
 
 	render() {
 		const inputProps = {
-      name: 'appt_time'
+      name: 'due_by'
     };
 
 		return(
@@ -198,8 +198,8 @@ export default class TaskForm extends React.Component {
 	         	input={false} 
 	         	open={true} 
 	         	inputProps={inputProps}
-            value={moment(this.state.appt_time.value)}
-            onChange={this.setApptTime} 
+            value={moment(this.state.due_by.value)}
+            onChange={this.setDueBy} 
             className="datetime" />
 
 	        <input type='submit'

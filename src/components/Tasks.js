@@ -37,14 +37,14 @@ export default class Tasks extends React.Component {
       let t = tasks.find(a => a.id === task.id);
   
       if (t) {
-        t.appt_time = task.appt_time
+        t.due_by = task.due_by
         t.title = task.title
       } else {
         tasks = [...this.state.tasks, task]
       }
 
       const sortedTasks = tasks.sort(function(a,b){
-        return new Date(a.appt_time) - new Date(b.appt_time);
+        return new Date(a.due_by) - new Date(b.due_by);
       })
         
       this.setState({
@@ -114,7 +114,7 @@ export default class Tasks extends React.Component {
     if(sessionStorage.user) {
       $.ajax({
         type: "GET",
-        url: 'http://localhost:3001/api/v1/appointments',
+        url: 'http://localhost:3001/api/v1/tasks',
         dataType: "JSON",
         headers: JSON.parse(sessionStorage.getItem('user'))
       }).done((data) => {

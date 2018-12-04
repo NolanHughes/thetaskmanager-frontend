@@ -31,7 +31,7 @@ export default class Task extends React.Component {
     if(window.confirm("Are you sure you want to delete this task?")) {
       $.ajax({
         type: "DELETE",
-        url: `http://localhost:3001/api/v1/appointments/${id}`,
+        url: `http://localhost:3001/api/v1/tasks/${id}`,
         headers: JSON.parse(sessionStorage.getItem('user'))
       })
       .done(() => {
@@ -49,7 +49,7 @@ export default class Task extends React.Component {
 		return(
 		  <div className='task'>
 		    <span>{this.state.task.title}</span>
-		   	<p>{formatDate(this.state.task.appt_time)}</p>
+		   	<p>{formatDate(this.state.task.due_by)}</p>
 		   	<button onClick={() => this.handleEditClick(this.state.task.id)}>
 		   		Edit inline
 		   	</button>
