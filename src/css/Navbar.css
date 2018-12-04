@@ -12,7 +12,7 @@
 }
 
 .Navbar__Items h2 {
-	margin: 15px 0px;
+  margin: 10px 0px 5px;
 }
 
 .Navbar__Items--right {
@@ -32,4 +32,21 @@
 
 .userId-navbar {
   margin-right: 10px;
+}
+
+.pre-signin-buttons {
+  margin-right: 15px;
+  border: 1px solid;
+  border-radius: 4px;
+  padding: 5px;
+  color: #008ce3;
+  font-size: 16px;
+}
+
+.pre-signin-buttons:hover {
+  background-color: #008ce3;
+  color: white;
+  border-radius: 4px;
+  border: none;
+  padding: 6px;
 }

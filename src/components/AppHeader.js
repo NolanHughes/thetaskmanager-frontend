@@ -21,6 +21,7 @@ export default class AppHeader extends React.Component {
 
 	handleSignOut = (e) => {
 		e.preventDefault();
+
 		$.ajax({
 			type: 'DELETE',
 			url: 'http://localhost:3001/auth/sign_out',
@@ -54,7 +55,7 @@ export default class AppHeader extends React.Component {
 			      <div className="Navbar__Link">
 			        <p>
 								<span className="userId-navbar">Welcome {userId}</span>
-								<button onClick={this.handleSignOut} >Sign out</button>
+								<button className="pre-signin-buttons" onClick={this.handleSignOut} >Sign out</button>
 							</p>
 			      </div>
 			    </nav>
@@ -62,8 +63,22 @@ export default class AppHeader extends React.Component {
 			)
 		} else {
 			return (
-				null
+				<div className="Navbar">       
+			    <nav className="Navbar__Items Navbar__Items--left">
+				    <h2 className="Navbar__Link">
+				      The Task Manager
+				    </h2>
+			    </nav>
+
+			    <nav className="Navbar__Items Navbar__Items--right">
+			      <div className="Navbar__Link">
+			      	<Link className="pre-signin-buttons" to='/Login'>Log In</Link>
+							<Link className="pre-signin-buttons" to='/Signup'>Sign Up</Link>
+			      </div>
+			    </nav>
+			  </div>
 			)
 		}
 	}
 }
+

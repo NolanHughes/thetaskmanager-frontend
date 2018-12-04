@@ -10,9 +10,10 @@ import '../css/App.css'
 
 export default (props) => {
 	return(
-		<Router> 
+		<Router>
+			
 			<div className="app">
-				<Route path="/" component={AppHeader}/>
+				<Route path="/" component={AppHeader} />
 				<Route exact path="/" component={Appointments} />
 				<Route path="/login" component={Login} />
 				<Route path="/signup" component={Signup} />

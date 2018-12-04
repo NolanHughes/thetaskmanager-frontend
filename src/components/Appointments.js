@@ -141,21 +141,25 @@ export default class Appointments extends React.Component {
   }
 
   render () {
-    return (
-      <React.Fragment>
-        <div className="container">
-          <div className="tasks">
-            <div id="add-task">
-              <button onClick={() => this.handleFormMount()}>Add task</button>
+    if(sessionStorage.getItem('user')) {
+      return (
+        <React.Fragment>
+          <div className="container">
+            <div className="tasks">
+              <div id="add-task">
+                <button onClick={() => this.handleFormMount()}>Add task</button>
+              </div>
+
+              <TasksHeader handleHeaderClick={this.handleHeaderClick} />
+
+              <AppointmentsList appointments={this.state.appointments} openTaskForm={this.handleFormMount} handleAppointment={this.handleAppointment}/>
             </div>
-
-            <TasksHeader handleHeaderClick={this.handleHeaderClick} />
-
-            <AppointmentsList appointments={this.state.appointments} openTaskForm={this.handleFormMount} handleAppointment={this.handleAppointment}/>
+            {this.state.renderForm ? <TaskForm key={this.state.appointmentId} handleAppointment={this.handleAppointment} updateAppointment={this.handleAppointment} editing={this.state.editing} id={this.state.appointmentId}/> : null}
           </div>
-          {this.state.renderForm ? <TaskForm key={this.state.appointmentId} handleAppointment={this.handleAppointment} updateAppointment={this.handleAppointment} editing={this.state.editing} id={this.state.appointmentId}/> : null}
-        </div>
-      </React.Fragment>
-    )
+        </React.Fragment>
+      )
+    } else {
+      return(null)
+    }
   }
 }
