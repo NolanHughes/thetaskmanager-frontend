@@ -2,19 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 
-import { AppointmentsList } from './AppointmentsList';
+import { TasksList } from './TasksList';
 import { TasksHeader } from './TasksHeader';
 import TaskForm from './TaskForm'
 
 import '../css/Tasks.css'
 
-export default class Appointments extends React.Component {
+export default class Tasks extends React.Component {
   constructor (props, railsContext) {
     super(props)
     this.state = {
-      appointments: this.props.appointments,
+      tasks: this.props.tasks,
       editing: false,
-      appointmentId: null,
+      taskId: null,
       renderForm: false
     }
     
@@ -23,44 +23,44 @@ export default class Appointments extends React.Component {
   }
 
   static propTypes = {
-    appointments: PropTypes.array.isRequired
+    tasks: PropTypes.array.isRequired
   }
 
   static defaultProps = {
-    appointments: []
+    tasks: []
   }
 
-  handleAppointment = (appointment) => {
-    let appointments = this.state.appointments
+  handleTask = (task) => {
+    let tasks = this.state.tasks
 
-    if (typeof appointment === 'object' && appointment !== null) {      
-      let appt = appointments.find(a => a.id === appointment.id);
+    if (typeof task === 'object' && task !== null) {      
+      let t = tasks.find(a => a.id === task.id);
   
-      if (appt) {
-        appt.appt_time = appointment.appt_time
-        appt.title = appointment.title
+      if (t) {
+        t.appt_time = task.appt_time
+        t.title = task.title
       } else {
-        appointments = [...this.state.appointments, appointment]
+        tasks = [...this.state.tasks, task]
       }
 
-      const sortedAppointments = appointments.sort(function(a,b){
+      const sortedTasks = tasks.sort(function(a,b){
         return new Date(a.appt_time) - new Date(b.appt_time);
       })
         
       this.setState({
-        appointments: sortedAppointments
+        tasks: sortedTasks
       });
     } else {
-      let id = appointment
+      let id = task
 
-      let index = appointments.map(x => {
+      let index = tasks.map(x => {
         return x.id;
       }).indexOf(id);
 
-      appointments.splice(index, 1);
+      tasks.splice(index, 1);
   
       this.setState({
-        appointments: appointments
+        tasks: tasks
       })  
     }
 
@@ -70,7 +70,7 @@ export default class Appointments extends React.Component {
   handleFormUnmount(){      
     this.setState({
       renderForm: false,
-      appointmentId: null,
+      taskId: null,
       editing: false
     });
   }
@@ -82,7 +82,7 @@ export default class Appointments extends React.Component {
         this.setState({
           renderForm: true,
           editing: true,
-          appointmentId: id
+          taskId: id
         })
       } else {
         this.setState({
@@ -90,19 +90,19 @@ export default class Appointments extends React.Component {
         })
       }
     } else {
-      if(id === this.state.appointmentId) {
+      if(id === this.state.taskId) {
         alert("You're already editing that task")
       } else if (id === undefined) {
-        if (window.confirm("Are you sure you want to add a new task before saving this appointment?")) {
+        if (window.confirm("Are you sure you want to add a new task before saving this task?")) {
           this.setState({
             editing: false,
-            appointmentId: null
+            taskId: null
           })
         }
       } else {
-        if (window.confirm("Are you sure you want to edit this task before saving your appointment?")) {
+        if (window.confirm("Are you sure you want to edit this task before saving your task?")) {
           this.setState({
-            appointmentId: id,
+            taskId: id,
             editing: true
           })
         }
@@ -118,7 +118,7 @@ export default class Appointments extends React.Component {
         dataType: "JSON",
         headers: JSON.parse(sessionStorage.getItem('user'))
       }).done((data) => {
-        this.setState({appointments: data});
+        this.setState({tasks: data});
       });
     }
   }
@@ -152,9 +152,9 @@ export default class Appointments extends React.Component {
 
               <TasksHeader handleHeaderClick={this.handleHeaderClick} />
 
-              <AppointmentsList appointments={this.state.appointments} openTaskForm={this.handleFormMount} handleAppointment={this.handleAppointment}/>
+              <TasksList tasks={this.state.tasks} openTaskForm={this.handleFormMount} handleTask={this.handleTask}/>
             </div>
-            {this.state.renderForm ? <TaskForm key={this.state.appointmentId} handleAppointment={this.handleAppointment} updateAppointment={this.handleAppointment} editing={this.state.editing} id={this.state.appointmentId}/> : null}
+            {this.state.renderForm ? <TaskForm key={this.state.taskId} handleTask={this.handleTask} updateTask={this.handleTask} editing={this.state.editing} id={this.state.taskId}/> : null}
           </div>
         </React.Fragment>
       )

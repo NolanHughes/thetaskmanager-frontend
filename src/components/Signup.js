@@ -2,7 +2,7 @@ import React from 'react';
 import $ from 'jquery';
 
 export default class Signup extends React.Component {
-  handleLogin = (e) => {
+  handleSignup = (e) => {
     e.preventDefault();
     $.ajax({
       type: 'POST',
@@ -29,7 +29,7 @@ export default class Signup extends React.Component {
     return (
       <div>
         <h2>Sign up</h2>
-        <form onSubmit={this.handleLogin} >
+        <form onSubmit={this.handleSignup} >
           <input name="email" placeholder="Email" ref={(input) => this.email = input} />
           <input name="password" placeholder="Password" type="password" ref = {(input) => this.password = input} />
           <input type="submit"/>

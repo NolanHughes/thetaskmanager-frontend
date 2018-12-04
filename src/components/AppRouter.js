@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-import Appointments from './Appointments';
+import Tasks from './Tasks';
 import AppHeader from './AppHeader';
 import TaskForm from './TaskForm';
 import Login from './Login'
@@ -14,7 +14,7 @@ export default (props) => {
 			
 			<div className="app">
 				<Route path="/" component={AppHeader} />
-				<Route exact path="/" component={Appointments} />
+				<Route exact path="/" component={Tasks} />
 				<Route path="/login" component={Login} />
 				<Route path="/signup" component={Signup} />
 				<Route path="/appointments/:id/edit" component={TaskForm} />

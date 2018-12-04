@@ -4,31 +4,31 @@ import $ from 'jquery'
 
 import {formatDate} from '../utils/format';
 
-export default class Appointment extends React.Component {
+export default class Task extends React.Component {
   constructor(props) {
   	super(props)
 
   	this.state = {
-  		appointment: props.appointment
+  		task: props.task
   	}
   }
 
   static propTypes = {
-		appointment: PropTypes.object.isRequired
+		task: PropTypes.object.isRequired
 	}
 
 	static defaultProps = { 
-		appointment: {}
+		task: {}
 	}
 
 	handleEditClick = (id) => {
 		this.props.openTaskForm(id)
 	}
 
-	deleteAppointment = () => {
-    const id = this.state.appointment.id
+	deleteTask = () => {
+    const id = this.state.task.id
 
-    if(window.confirm("Are you sure you want to delete this appointment?")) {
+    if(window.confirm("Are you sure you want to delete this task?")) {
       $.ajax({
         type: "DELETE",
         url: `http://localhost:3001/api/v1/appointments/${id}`,
@@ -36,10 +36,10 @@ export default class Appointment extends React.Component {
       })
       .done(() => {
         console.log('deleted')
-        this.props.handleAppointment(id);
+        this.props.handleTask(id);
       })
       .fail((response) => {
-        console.log('appointment deleting failed!');
+        console.log('task deleting failed!');
       });
     }
   }
@@ -47,13 +47,13 @@ export default class Appointment extends React.Component {
 	render() {
 
 		return(
-		  <div className='appointment'>
-		    <span>{this.state.appointment.title}</span>
-		   	<p>{formatDate(this.state.appointment.appt_time)}</p>
-		   	<button onClick={() => this.handleEditClick(this.state.appointment.id)}>
+		  <div className='task'>
+		    <span>{this.state.task.title}</span>
+		   	<p>{formatDate(this.state.task.appt_time)}</p>
+		   	<button onClick={() => this.handleEditClick(this.state.task.id)}>
 		   		Edit inline
 		   	</button>
-        <button onClick={this.deleteAppointment}>
+        <button onClick={this.deleteTask}>
           Delete task
         </button>
 		  </div>

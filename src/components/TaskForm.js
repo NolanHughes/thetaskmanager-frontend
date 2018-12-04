@@ -85,10 +85,10 @@ export default class TaskForm extends React.Component {
   handleFormSubmit = (e) => {
     e.preventDefault();
 
-    this.state.editing ? this.updateAppointment() : this.addAppointment()
+    this.state.editing ? this.updateTask() : this.addTask()
   }
 
-  addAppointment() {
+  addTask() {
     const appointment = {
       title: this.state.title.value, 
       appt_time: this.state.appt_time.value
@@ -102,7 +102,7 @@ export default class TaskForm extends React.Component {
     })
     .done((data) => {
       this.resetFormErrors();
-      this.props.handleAppointment(data);      
+      this.props.handleTask(data);      
     })
     .fail((response) => {
       this.setState({
@@ -112,7 +112,7 @@ export default class TaskForm extends React.Component {
     });
   }
 
-  updateAppointment() {
+  updateTask() {
     const appointment = {
       title: this.state.title.value,
       appt_time: this.state.appt_time.value
@@ -128,7 +128,7 @@ export default class TaskForm extends React.Component {
       this.setState({
         editing: false
       })
-      this.props.handleAppointment(data);
+      this.props.handleTask(data);
     })
     .fail((response) => {
       this.setState({
@@ -138,9 +138,9 @@ export default class TaskForm extends React.Component {
     });  
   }
 
-  deleteAppointment = () => {
+  deleteTask = () => {
     const id  = this.props.id
-    if(window.confirm("Are you sure you want to delete this appointment?")) {
+    if(window.confirm("Are you sure you want to delete this task?")) {
       $.ajax({
         type: "DELETE",
         url: `http://localhost:3001/api/v1/appointments/${id}`,
@@ -148,10 +148,10 @@ export default class TaskForm extends React.Component {
       })
       .done(() => {
         console.log('deleted')
-        this.props.handleAppointment(id);
+        this.props.handleTask(id);
       })
       .fail((response) => {
-        console.log('appointment deleting failed!');
+        console.log('task deleting failed!');
       });
     }
   }
@@ -210,7 +210,7 @@ export default class TaskForm extends React.Component {
 
 	      {this.state.editing && (
 	        <p>
-	          <button onClick={this.deleteAppointment}>
+	          <button onClick={this.deleteTask}>
 	            Delete task
 	          </button>
 	        </p>

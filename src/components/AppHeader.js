@@ -55,7 +55,7 @@ export default class AppHeader extends React.Component {
 			      <div className="Navbar__Link">
 			        <p>
 								<span className="userId-navbar">Welcome {userId}</span>
-								<button className="pre-signin-buttons" onClick={this.handleSignOut} >Sign out</button>
+								<button className="navbar-buttons" onClick={this.handleSignOut} >Sign out</button>
 							</p>
 			      </div>
 			    </nav>
@@ -72,8 +72,8 @@ export default class AppHeader extends React.Component {
 
 			    <nav className="Navbar__Items Navbar__Items--right">
 			      <div className="Navbar__Link">
-			      	<Link className="pre-signin-buttons" to='/Login'>Log In</Link>
-							<Link className="pre-signin-buttons" to='/Signup'>Sign Up</Link>
+			      	<Link className="navbar-buttons" to='/Login'>Log In</Link>
+							<Link className="navbar-buttons" to='/Signup'>Sign Up</Link>
 			      </div>
 			    </nav>
 			  </div>
