@@ -15,5 +15,9 @@ export const validations = {
 		} else {
 			return "can't be in the past."
 		}
+	},
+
+	idShouldExist(id) {
+		return ''
 	}
 }

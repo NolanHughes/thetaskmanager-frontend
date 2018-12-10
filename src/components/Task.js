@@ -50,11 +50,12 @@ export default class Task extends React.Component {
 		  <div className='task'>
 		    <span>{this.state.task.title}</span>
 		   	<p>{formatDate(this.state.task.due_by)}</p>
+        <p>Assigned To: {this.props.assigned_user.uid}</p>
 		   	<button onClick={() => this.handleEditClick(this.state.task.id)}>
-		   		Edit inline
+		   		Edit
 		   	</button>
         <button onClick={this.deleteTask}>
-          Delete task
+          Delete
         </button>
 		  </div>
 	  )

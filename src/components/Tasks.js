@@ -13,6 +13,7 @@ export default class Tasks extends React.Component {
     super(props)
     this.state = {
       tasks: this.props.tasks,
+      users: null,
       editing: false,
       taskId: null,
       renderForm: false
@@ -118,7 +119,10 @@ export default class Tasks extends React.Component {
         dataType: "JSON",
         headers: JSON.parse(sessionStorage.getItem('user'))
       }).done((data) => {
-        this.setState({tasks: data});
+        this.setState({
+          tasks: data.tasks,
+          users: data.users
+        });
       });
     }
   }
@@ -152,9 +156,21 @@ export default class Tasks extends React.Component {
 
               <TasksHeader handleHeaderClick={this.handleHeaderClick} />
 
-              <TasksList tasks={this.state.tasks} openTaskForm={this.handleFormMount} handleTask={this.handleTask}/>
+              <TasksList 
+                tasks={this.state.tasks} 
+                openTaskForm={this.handleFormMount} 
+                handleTask={this.handleTask} 
+                users={this.state.users}
+              />
             </div>
-            {this.state.renderForm ? <TaskForm key={this.state.taskId} handleTask={this.handleTask} updateTask={this.handleTask} editing={this.state.editing} id={this.state.taskId}/> : null}
+            {this.state.renderForm ? <TaskForm 
+              key={this.state.taskId} 
+              handleTask={this.handleTask} 
+              updateTask={this.handleTask} 
+              editing={this.state.editing} 
+              id={this.state.taskId} 
+              users={this.state.users}/>: null
+            }
           </div>
         </React.Fragment>
       )

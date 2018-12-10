@@ -9,8 +9,7 @@ import '../css/App.css'
 
 export default (props) => {
 	return(
-		<Router>
-			
+		<Router>			
 			<div className="app">
 				<Route path="/" component={AppHeader} />
 				<Route exact path="/" component={Tasks} />

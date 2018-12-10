@@ -16,10 +16,13 @@ export default class TaskForm extends React.Component {
     this.state = {
       title: {value: '', valid: false},
       due_by: {value: new Date(), valid: false},
+      assigned_to: '',
       formErrors: {},
       formValid: false,
       editing: props.editing
     }
+
+    this.handleSelectUser = this.handleSelectUser.bind(this);
   }
 
   static formValidations = {
@@ -31,7 +34,13 @@ export default class TaskForm extends React.Component {
     ]
   }
 
-  componentDidMount() {  
+  handleSelectUser(e) {
+    this.setState({
+      assigned_to: e.target.value
+    });
+  }
+
+  componentDidMount() {
     if(this.props.editing) {
       $.ajax({
         type: "GET",
@@ -41,17 +50,28 @@ export default class TaskForm extends React.Component {
       }).done((data) => {
         this.setState({
           title: {value: data.title, valid: true},
-          due_by: {value: data.due_by, valid: true}
+          due_by: {value: data.due_by, valid: true},
+          assigned_to: data.assigned_to_id
         });
       });
+    } 
+    else {
+      let userEmail = JSON.parse(sessionStorage.getItem('user')).uid
+      let id = this.props.users.find( user => user.uid === userEmail ).id
+      this.setState({
+        assigned_to: id
+      })
     }
   }
 
   handleUserInput = (fieldName, fieldValue, validations) => {
     const newFieldState = {value: fieldValue, valid: this.state[fieldName].valid}
 
-    this.setState({[fieldName]: newFieldState},
-                  () => { this.validateField(fieldName, fieldValue, validations) });
+    this.setState({
+      [fieldName]: newFieldState
+    }, () => { 
+         this.validateField(fieldName, fieldValue, validations)
+       });
   }
 
   validateField (fieldName, fieldValue, validations) {
@@ -91,7 +111,8 @@ export default class TaskForm extends React.Component {
   addTask() {
     const task = {
       title: this.state.title.value, 
-      due_by: this.state.due_by.value
+      due_by: this.state.due_by.value,
+      assigned_to_id: this.state.assigned_to
     };
 
     $.ajax({
@@ -185,12 +206,19 @@ export default class TaskForm extends React.Component {
       name: 'due_by'
     };
 
+    let users = this.props.users.map( user => {
+      return(<option key={user.id} value={user.id}>{user.uid}</option>)
+    })
+
 		return(
 			<div className="task-form-container">
 				<FormErrors formErrors = {this.state.formErrors} />
 
 	      <form onSubmit={this.handleFormSubmit} id="task-form">
-	        <input name='title' id="task-title" placeholder='Task Title'
+	        <input 
+            name='title' 
+            id="task-title" 
+            placeholder='Task Title'
 	          value={this.state.title.value}
 	          onChange={this.handleChange} />
 
@@ -201,6 +229,10 @@ export default class TaskForm extends React.Component {
             value={moment(this.state.due_by.value)}
             onChange={this.setDueBy} 
             className="datetime" />
+
+          <select value={this.state.assigned_to} onChange={this.handleSelectUser}>
+            {users}
+          </select>
 
 	        <input type='submit'
 	          value={this.state.editing ? 'Update Task' : 'Make Task'}
