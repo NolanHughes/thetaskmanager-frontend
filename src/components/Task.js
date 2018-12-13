@@ -36,7 +36,7 @@ export default class Task extends React.Component {
       })
       .done(() => {
         console.log('deleted')
-        this.props.handleTask(id);
+        this.props.handleDeletingTask(id);
       })
       .fail((response) => {
         console.log('task deleting failed!');
@@ -45,7 +45,6 @@ export default class Task extends React.Component {
   }
 
 	render() {
-
 		return(
 		  <div className='task'>
 		    <span>{this.state.task.title}</span>

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import $ from 'jquery';
 
 import { TasksList } from './TasksList';
-import { TasksHeader } from './TasksHeader';
 import TaskForm from './TaskForm'
 
 import '../css/Tasks.css'
@@ -12,8 +11,9 @@ export default class Tasks extends React.Component {
   constructor (props, railsContext) {
     super(props)
     this.state = {
-      tasks: this.props.tasks,
-      users: null,
+      yourTasks: [],
+      assignedTasks: [],
+      users: [],
       editing: false,
       taskId: null,
       renderForm: false
@@ -21,48 +21,144 @@ export default class Tasks extends React.Component {
     
     this.handleFormUnmount = this.handleFormUnmount.bind(this);
     this.handleFormMount = this.handleFormMount.bind(this);
+    this.handleAddingTask = this.handleAddingTask.bind(this)
+    this.handleUpdatingTask = this.handleUpdatingTask.bind(this)
+    this.handleDeletingTask = this.handleDeletingTask.bind(this)
   }
 
   static propTypes = {
-    tasks: PropTypes.array.isRequired
+    yourTasks: PropTypes.array.isRequired,
+    assignedTasks: PropTypes.array.isRequired
   }
 
   static defaultProps = {
-    tasks: []
+    yourTasks: [],
+    assignedTasks: []
   }
 
-  handleTask = (task) => {
-    let tasks = this.state.tasks
+  handleAddingTask(task) {
+    let yourTasks = this.state.yourTasks
+    let assignedTasks = this.state.assignedTasks
 
-    if (typeof task === 'object' && task !== null) {      
-      let t = tasks.find(a => a.id === task.id);
-  
-      if (t) {
-        t.due_by = task.due_by
-        t.title = task.title
-      } else {
-        tasks = [...this.state.tasks, task]
-      }
+    let currentUserEmail = JSON.parse(sessionStorage.getItem('user')).uid
+    let assignedUserEmail = this.state.users.find(user => user.id === task.assigned_to_id).email
 
-      const sortedTasks = tasks.sort(function(a,b){
+    if (currentUserEmail === assignedUserEmail){
+      yourTasks = [...this.state.yourTasks, task]
+
+      const sortedTasks = yourTasks.sort(function(a,b){
         return new Date(a.due_by) - new Date(b.due_by);
       })
         
       this.setState({
-        tasks: sortedTasks
+        yourTasks: sortedTasks
       });
     } else {
-      let id = task
+      assignedTasks = [...this.state.assignedTasks, task]
 
-      let index = tasks.map(x => {
+      const sortedTasks = assignedTasks.sort(function(a,b){
+        return new Date(a.due_by) - new Date(b.due_by);
+      })
+        
+      this.setState({
+        assignedTasks: sortedTasks
+      });
+    }
+
+    this.handleFormUnmount()
+  }
+
+  handleUpdatingTask(task) {
+    let yourTasks = this.state.yourTasks
+    let assignedTasks = this.state.assignedTasks
+    let currentUserEmail = JSON.parse(sessionStorage.getItem('user')).uid
+    let assignedUserEmail = this.state.users.find(user => user.id === task.assigned_to_id).email
+
+    if (currentUserEmail === assignedUserEmail){
+      let t = yourTasks.find(a => a.id === task.id)
+
+      if (t) {
+        t.due_by = task.due_by
+        t.title = task.title
+        t.assigned_to_id = task.assigned_to_id      
+
+        const sortedTasks = yourTasks.sort(function(a,b){
+          return new Date(a.due_by) - new Date(b.due_by);
+        })
+        
+        this.setState({
+          yourTasks: sortedTasks
+        });        
+      } else {   
+        yourTasks = [...this.state.yourTasks, task]
+
+        const sortedTasks = yourTasks.sort(function(a,b){
+          return new Date(a.due_by) - new Date(b.due_by);
+        })
+        this.handleDeletingTask(task.id)
+
+        this.setState({
+          yourTasks: sortedTasks
+        });        
+      }
+    } else {  
+      let t = assignedTasks.find(a => a.id === task.id)
+
+      if (t) {
+        t.due_by = task.due_by
+        t.title = task.title
+        t.assigned_to_id = task.assigned_to_id
+
+        const sortedTasks = assignedTasks.sort(function(a,b){
+          return new Date(a.due_by) - new Date(b.due_by);
+        })
+        
+        this.setState({
+          assignedTasks: sortedTasks
+        });
+        
+      } else {
+        assignedTasks = [...this.state.assignedTasks, task]
+
+        const sortedTasks = assignedTasks.sort(function(a,b){
+          return new Date(a.due_by) - new Date(b.due_by);
+        })
+        
+        this.handleDeletingTask(task.id)
+        
+        this.setState({
+          assignedTasks: sortedTasks
+        });        
+      }
+    }
+
+    this.handleFormUnmount()
+  }
+
+  handleDeletingTask = (id) => {    
+    let yourTasks = this.state.yourTasks
+    let assignedTasks = this.state.assignedTasks
+    
+    if (yourTasks.find(task => task.id === id)){
+      let index = yourTasks.map(x => {
         return x.id;
       }).indexOf(id);
 
-      tasks.splice(index, 1);
+      yourTasks.splice(index, 1);
   
       this.setState({
-        tasks: tasks
-      })  
+        yourTasks: yourTasks
+      })          
+    } else {
+      let index = assignedTasks.map(x => {
+        return x.id;
+      }).indexOf(id);
+
+      assignedTasks.splice(index, 1);
+  
+      this.setState({
+        assignedTasks: assignedTasks
+      })   
     }
 
     this.handleFormUnmount()
@@ -120,27 +216,11 @@ export default class Tasks extends React.Component {
         headers: JSON.parse(sessionStorage.getItem('user'))
       }).done((data) => {
         this.setState({
-          tasks: data.tasks,
+          yourTasks: data.your_tasks,
+          assignedTasks: data.assigned_tasks,
           users: data.users
         });
       });
-    }
-  }
-
-
-  handleHeaderClick = () => {
-    const taskList = document.getElementById("task-list")
-    const downArrow = document.getElementById("downArrow")
-    const rightArrow = document.getElementById("rightArrow") 
-
-    if(taskList.style.display !== "none") {
-      taskList.style.display = "none"
-      downArrow.style.display = "none"
-      rightArrow.style.display = "inline-flex"
-    } else {
-      taskList.style.display = "block"
-      downArrow.style.display = "inline-flex"
-      rightArrow.style.display = "none"
     }
   }
 
@@ -154,19 +234,19 @@ export default class Tasks extends React.Component {
                 <button onClick={() => this.handleFormMount()}>Add task</button>
               </div>
 
-              <TasksHeader handleHeaderClick={this.handleHeaderClick} />
-
               <TasksList 
-                tasks={this.state.tasks} 
+                yourTasks={this.state.yourTasks} 
+                assignedTasks={this.state.assignedTasks} 
                 openTaskForm={this.handleFormMount} 
-                handleTask={this.handleTask} 
+                handleDeletingTask={this.handleDeletingTask} 
                 users={this.state.users}
               />
             </div>
             {this.state.renderForm ? <TaskForm 
               key={this.state.taskId} 
-              handleTask={this.handleTask} 
-              updateTask={this.handleTask} 
+              handleUpdatingTask={this.handleUpdatingTask} 
+              handleAddingTask={this.handleAddingTask}
+              handleDeletingTask={this.handleDeletingTask}
               editing={this.state.editing} 
               id={this.state.taskId} 
               users={this.state.users}/>: null

@@ -123,7 +123,7 @@ export default class TaskForm extends React.Component {
     })
     .done((data) => {
       this.resetFormErrors();
-      this.props.handleTask(data);      
+      this.props.handleAddingTask(data);      
     })
     .fail((response) => {
       this.setState({
@@ -136,7 +136,8 @@ export default class TaskForm extends React.Component {
   updateTask() {
     const task = {
       title: this.state.title.value,
-      due_by: this.state.due_by.value
+      due_by: this.state.due_by.value,
+      assigned_to_id: this.state.assigned_to
     };
     
     $.ajax({
@@ -149,7 +150,7 @@ export default class TaskForm extends React.Component {
       this.setState({
         editing: false
       })
-      this.props.handleTask(data);
+      this.props.handleUpdatingTask(data);
     })
     .fail((response) => {
       this.setState({
@@ -169,7 +170,7 @@ export default class TaskForm extends React.Component {
       })
       .done(() => {
         console.log('deleted')
-        this.props.handleTask(id);
+        this.props.handleDeletingTask(id);
       })
       .fail((response) => {
         console.log('task deleting failed!');
