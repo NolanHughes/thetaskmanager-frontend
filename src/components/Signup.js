@@ -2,6 +2,14 @@ import React from 'react';
 import $ from 'jquery';
 
 export default class Signup extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      errors: []
+    }
+  }
+
   handleSignup = (e) => {
     e.preventDefault();
     $.ajax({
@@ -22,12 +30,29 @@ export default class Signup extends React.Component {
       );
       this.props.history.push('/')
     })
+    .fail((response) => {
+      let errors = response.responseJSON.errors.full_messages
+
+      this.setState({
+        errors: errors
+      })
+    });
 
   }
 
   render () {
+    let counter = 0
+
+    let errors = this.state.errors.map( error => {
+      counter = counter + 1
+      return(<p key={counter}>{error}</p>)
+    })
+
     return (
       <div>
+        <div className="login-errors">
+          {errors}
+        </div>
         <h2>Sign up</h2>
         <form onSubmit={this.handleSignup} >
           <input 

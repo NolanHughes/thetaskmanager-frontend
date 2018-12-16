@@ -1,6 +1,12 @@
-- Expand task backend so that collaboration between users can happen.
-- Delete everything associated with appointments
-- Need error message to display when log in credentials are invalid.
-- Fix edge cases with delete and edit buttons.
 - Refactor
-- Check for duplicate emails at signup
+
+- Auth to sign up
+
+- Allow for retrieving password
+
+- category (marketing or management for now)
+- recurring
+- notes
+- status_id?
+- priority_id?
+- time_estimate?
