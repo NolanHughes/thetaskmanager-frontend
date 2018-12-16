@@ -48,8 +48,9 @@ export default class Task extends React.Component {
 		return(
 		  <div className='task'>
 		    <span>{this.state.task.title}</span>
-		   	<p>{formatDate(this.state.task.due_by)}</p>
+		   	<p>Due By: {formatDate(this.state.task.due_by)}</p>
         <p>Assigned To: {this.props.assigned_user.uid}</p>
+        {(this.props.task.category_id === 1) ? <p>Marketing</p> : <p>Management</p>}
 		   	<button onClick={() => this.handleEditClick(this.state.task.id)}>
 		   		Edit
 		   	</button>

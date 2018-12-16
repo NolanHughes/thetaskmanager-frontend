@@ -17,12 +17,14 @@ export default class TaskForm extends React.Component {
       title: {value: '', valid: false},
       due_by: {value: new Date(), valid: false},
       assigned_to: '',
+      categories: [],
+      category_id: '',
       formErrors: {},
       formValid: false,
       editing: props.editing
     }
 
-    this.handleSelectUser = this.handleSelectUser.bind(this);
+    this.handleDropdown = this.handleDropdown.bind(this);
   }
 
   static formValidations = {
@@ -34,9 +36,9 @@ export default class TaskForm extends React.Component {
     ]
   }
 
-  handleSelectUser(e) {
+  handleDropdown(e) {
     this.setState({
-      assigned_to: e.target.value
+      [e.target.name]: parseInt(e.target.value)
     });
   }
 
@@ -51,16 +53,36 @@ export default class TaskForm extends React.Component {
         this.setState({
           title: {value: data.title, valid: true},
           due_by: {value: data.due_by, valid: true},
-          assigned_to: data.assigned_to_id
+          assigned_to: data.assigned_to_id,
+          category_id: data.category_id
         });
+      });
+
+      $.ajax({
+        type: "GET",
+        url: 'http://localhost:3001/categories',
+        dataType: "JSON"
+      }).done((data) => {
+        this.setState({
+          categories: data
+        })
       });
     } 
     else {
       let userEmail = JSON.parse(sessionStorage.getItem('user')).uid
       let id = this.props.users.find( user => user.uid === userEmail ).id
-      this.setState({
-        assigned_to: id
-      })
+
+      $.ajax({
+        type: "GET",
+        url: 'http://localhost:3001/categories',
+        dataType: "JSON"
+      }).done((data) => {
+        this.setState({
+          categories: data,
+          category_id: data[0].id,
+          assigned_to: id
+        })
+      });
     }
   }
 
@@ -112,7 +134,8 @@ export default class TaskForm extends React.Component {
     const task = {
       title: this.state.title.value, 
       due_by: this.state.due_by.value,
-      assigned_to_id: this.state.assigned_to
+      assigned_to_id: this.state.assigned_to,
+      category_id: this.state.category_id
     };
 
     $.ajax({
@@ -137,7 +160,8 @@ export default class TaskForm extends React.Component {
     const task = {
       title: this.state.title.value,
       due_by: this.state.due_by.value,
-      assigned_to_id: this.state.assigned_to
+      assigned_to_id: this.state.assigned_to,
+      category_id: this.state.category_id
     };
     
     $.ajax({
@@ -211,6 +235,10 @@ export default class TaskForm extends React.Component {
       return(<option key={user.id} value={user.id}>{user.uid}</option>)
     })
 
+    let categories = this.state.categories.map( category => {
+      return(<option key={category.id} value={category.id}>{category.name}</option>)
+    })
+
 		return(
 			<div className="task-form-container">
 				<FormErrors formErrors = {this.state.formErrors} />
@@ -231,8 +259,13 @@ export default class TaskForm extends React.Component {
             onChange={this.setDueBy} 
             className="datetime" />
 
-          <select value={this.state.assigned_to} onChange={this.handleSelectUser}>
+          <select value={this.state.assigned_to} onChange={this.handleDropdown} name="assigned_to">
             {users}
+          </select>
+
+          <label>Category:</label>
+          <select value={this.state.category_id} onChange={this.handleDropdown} name="category_id">
+            {categories}
           </select>
 
 	        <input type='submit'

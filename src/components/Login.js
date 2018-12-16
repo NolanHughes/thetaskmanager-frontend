@@ -44,7 +44,7 @@ export default class Login extends React.Component {
     let counter = 0
 
     let errors = this.state.errors.map( error => {
-      counter = counter + 1
+      ++counter
       return(<p key={counter}>{error}</p>)
     })
     return (

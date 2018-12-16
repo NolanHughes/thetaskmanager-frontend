@@ -80,7 +80,8 @@ export default class Tasks extends React.Component {
       if (t) {
         t.due_by = task.due_by
         t.title = task.title
-        t.assigned_to_id = task.assigned_to_id      
+        t.assigned_to_id = task.assigned_to_id
+        t.category_id = task.category_id      
 
         const sortedTasks = yourTasks.sort(function(a,b){
           return new Date(a.due_by) - new Date(b.due_by);
@@ -108,6 +109,7 @@ export default class Tasks extends React.Component {
         t.due_by = task.due_by
         t.title = task.title
         t.assigned_to_id = task.assigned_to_id
+        t.category_id = task.category_id
 
         const sortedTasks = assignedTasks.sort(function(a,b){
           return new Date(a.due_by) - new Date(b.due_by);
