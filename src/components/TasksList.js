@@ -40,18 +40,19 @@ export class TasksList extends React.Component {
     // For task list div id: id="[insert list name here]-task-list"
     // For name prop of TasksHeader: Capital letter of what will preface " Task" of display.
     // Make sure these are the same thing or it will break.
+    // debugger
     return(
       <div>
       <div>
         <TasksHeader name={'Your'} />
         <div id="Your-task-list">       
-          {yourTasks}
+          {yourTasks.length !== 0 ? yourTasks : <div className="empty-task-list">You have no tasks that need to be completed.</div>}
         </div>
       </div>
       <div>
         <TasksHeader name={'Assigned'} />
         <div id="Assigned-task-list">       
-          {assignedTasks}
+          {(assignedTasks.length !== 0 ? assignedTasks : <div className="empty-task-list">You have no tasks assigned to other people.</div> )}
         </div>
       </div>
       </div>

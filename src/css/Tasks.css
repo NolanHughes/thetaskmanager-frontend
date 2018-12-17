@@ -71,3 +71,9 @@
 #add-task form {
 	padding-top: 10px;
 }
+
+.empty-task-list {
+	text-align: center;
+  font-size: 1.25em;
+  color: #008ce3;
+}

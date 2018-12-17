@@ -9,6 +9,7 @@ import { validations } from '../utils/validations';
 import { FormErrors } from './FormErrors';
 
 import '../css/Tasks.css'
+import '../css/Form.css'
 
 export default class TaskForm extends React.Component {
   constructor (props, railsContext) {
@@ -226,6 +227,13 @@ export default class TaskForm extends React.Component {
     );
   }
 
+  closeForm = () => {
+    if (window.confirm("Are you sure you want to close this task before saving?")) {
+      this.props.handleFormUnmount()
+    }
+    
+  }
+
 	render() {
 		const inputProps = {
       name: 'due_by'
@@ -241,6 +249,7 @@ export default class TaskForm extends React.Component {
 
 		return(
 			<div className="task-form-container">
+      <button className="close-button" onClick={() => this.closeForm()}>X</button>
 				<FormErrors formErrors = {this.state.formErrors} />
 
 	      <form onSubmit={this.handleFormSubmit} id="task-form">

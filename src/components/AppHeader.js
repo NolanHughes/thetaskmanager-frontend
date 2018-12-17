@@ -46,12 +46,13 @@ export default class AppHeader extends React.Component {
 				        Meyer & O'Connor
 				      </h2>
 			      </Link>
-			      <div className="Navbar__Link Navbar__Items--selected">
-			        <button value="1" onClick={this.props.handleCategoryChange}>Marketing</button>
-			      </div>
-			      <div className="Navbar__Link Navbar__Items--not-selected">
-			      	<button value="2" onClick={this.props.handleCategoryChange}>Management</button>
-			      </div>
+			        <button id="category1" className="Navbar__Link Navbar__Items--selected"value="1" onClick={this.props.handleCategoryChange}>
+			        	Marketing
+			        </button>
+
+			      	<button id="category2" className="Navbar__Link Navbar__Items--not-selected" value="2" onClick={this.props.handleCategoryChange}>
+			      		Management
+			      	</button>
 			    </nav>
 
 			    <nav className="Navbar__Items Navbar__Items--right">

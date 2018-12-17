@@ -230,9 +230,20 @@ export default class Tasks extends React.Component {
   }
 
   handleCategoryChange = (e) => {
-    this.setState({
-      category: parseInt(e.target.value)
-    })
+
+    let id = parseInt(e.target.value)
+
+    if (id !== this.state.category) {
+      e.target.classList.add('Navbar__Items--selected');
+      e.target.classList.remove('Navbar__Items--not-selected');
+
+      document.getElementById(`category${this.state.category}`).classList.add('Navbar__Items--not-selected');
+      document.getElementById(`category${this.state.category}`).classList.remove('Navbar__Items--selected');
+
+      this.setState({
+        category: id
+      })
+    } 
   }
 
   render () {
@@ -259,6 +270,7 @@ export default class Tasks extends React.Component {
               handleUpdatingTask={this.handleUpdatingTask} 
               handleAddingTask={this.handleAddingTask}
               handleDeletingTask={this.handleDeletingTask}
+              handleFormUnmount={this.handleFormUnmount}
               editing={this.state.editing} 
               id={this.state.taskId} 
               users={this.state.users}/>: null
@@ -267,7 +279,12 @@ export default class Tasks extends React.Component {
         </React.Fragment>
       )
     } else {
-      return(null)
+      return(
+        <div>
+          <AppHeader handleCategoryChange={this.handleCategoryChange} history={this.props.history}/>
+          Welcome to The Task Manager. Click the log in or sign up button to get started.
+        </div>
+      )
     }
   }
 }
