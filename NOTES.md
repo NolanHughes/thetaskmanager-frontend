@@ -4,7 +4,7 @@
 
 - Allow for retrieving password
 
-- category (marketing or management for now) - Just need to sort in seperate tabs
+- category (marketing or management for now) - Just need to dynamically style tabs
 - recurring
 - notes
 - status_id?

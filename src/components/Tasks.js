@@ -4,16 +4,18 @@ import $ from 'jquery';
 
 import { TasksList } from './TasksList';
 import TaskForm from './TaskForm'
+import AppHeader from './AppHeader'
 
 import '../css/Tasks.css'
 
 export default class Tasks extends React.Component {
-  constructor (props, railsContext) {
+  constructor (props) {
     super(props)
     this.state = {
       yourTasks: [],
       assignedTasks: [],
       users: [],
+      category: 1,
       editing: false,
       taskId: null,
       renderForm: false
@@ -209,6 +211,7 @@ export default class Tasks extends React.Component {
     }
   }
 
+  // Category is hard coded right now
   componentDidMount() {
     if(sessionStorage.user) {
       $.ajax({
@@ -226,10 +229,17 @@ export default class Tasks extends React.Component {
     }
   }
 
+  handleCategoryChange = (e) => {
+    this.setState({
+      category: parseInt(e.target.value)
+    })
+  }
+
   render () {
     if(sessionStorage.getItem('user')) {
       return (
         <React.Fragment>
+          <AppHeader handleCategoryChange={this.handleCategoryChange} history={this.props.history}/>
           <div className="container">
             <div className="tasks">
               <div id="add-task">
@@ -237,8 +247,8 @@ export default class Tasks extends React.Component {
               </div>
 
               <TasksList 
-                yourTasks={this.state.yourTasks} 
-                assignedTasks={this.state.assignedTasks} 
+                yourTasks={this.state.yourTasks.filter(task => task.category_id === this.state.category)} 
+                assignedTasks={this.state.assignedTasks.filter(task => task.category_id === this.state.category)} 
                 openTaskForm={this.handleFormMount} 
                 handleDeletingTask={this.handleDeletingTask} 
                 users={this.state.users}

@@ -1,6 +1,8 @@
 import React from 'react';
 import $ from 'jquery';
 
+import AppHeader from './AppHeader'
+
 export default class Signup extends React.Component {
   constructor(props) {
     super(props)
@@ -50,6 +52,7 @@ export default class Signup extends React.Component {
 
     return (
       <div>
+        <AppHeader />
         <div className="login-errors">
           {errors}
         </div>
