@@ -35,8 +35,8 @@ export default class AppHeader extends React.Component {
 
 	render () {
 		if(sessionStorage.getItem('user')) {
-			let userEmail = JSON.parse(sessionStorage.getItem('user')).uid
-			let userId = userEmail.substring(0, userEmail.indexOf("@"))
+			let userName = JSON.parse(sessionStorage.getItem('user')).name
+			// let userId = userEmail.substring(0, userEmail.indexOf("@"))
 			
 			return (
 				<div className="Navbar">       
@@ -58,7 +58,7 @@ export default class AppHeader extends React.Component {
 			    <nav className="Navbar__Items Navbar__Items--right">
 			      <div className="Navbar__Link">
 			        <p>
-								<span className="userId-navbar">Welcome {userId}</span>
+								<span className="userId-navbar">Welcome {userName}</span>
 								<button className="navbar-buttons" onClick={this.handleSignOut} >Sign out</button>
 							</p>
 			      </div>

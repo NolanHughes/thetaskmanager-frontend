@@ -27,6 +27,20 @@ a {
   padding-top: 10px;
   border-bottom: solid 1px #ccc;
   display: grid;
-  grid-template-columns: 16.66% 16.66% 16.66% 16.66% 16.66% 16.66%;
+  grid-template-columns: 6% 94%;
   align-items: center;
+}
+
+.clickable-task-portion {
+  display: grid;
+  grid-template-columns: 70% 10% 20%;
+  align-items: center;
+}
+
+.clickable-task-portion:hover {
+  cursor: pointer;
+}
+
+.title {
+  padding-left: 10px;
 }

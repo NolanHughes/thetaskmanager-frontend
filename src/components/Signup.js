@@ -14,20 +14,24 @@ export default class Signup extends React.Component {
 
   handleSignup = (e) => {
     e.preventDefault();
+    debugger
     $.ajax({
       type: 'POST',
       url: 'http://localhost:3001/auth',
       data: {
         email: this.email.value,
-        password: this.password.value
+        password: this.password.value,
+        name: e.target.name.value
       }
     })
     .done((response, status, jqXHR) => {
+      debugger
       sessionStorage.setItem("user",
         JSON.stringify({
           'access-token': jqXHR.getResponseHeader('access-token'),
           client: jqXHR.getResponseHeader('client'),
-          uid: response.data.uid
+          uid: response.data.uid,
+          name: response.data.name
         })
       );
       this.props.history.push('/')
@@ -69,6 +73,12 @@ export default class Signup extends React.Component {
             type="password" 
             autoComplete="current-password" 
             ref = {(input) => this.password = input} />
+          <input 
+            name="name" 
+            placeholder="Name" 
+            type="text" 
+            autoComplete="username" 
+            ref = {(input) => this.name = input} />
           <input type="submit"/>
         </form>
       </div>

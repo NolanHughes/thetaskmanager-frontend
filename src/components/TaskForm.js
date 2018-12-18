@@ -20,8 +20,10 @@ export default class TaskForm extends React.Component {
       assigned_to: '',
       categories: [],
       category_id: '',
+      recurring: false,
+      notes: '',
       formErrors: {},
-      formValid: false,
+      formValid: props.formValid,
       editing: props.editing
     }
 
@@ -55,7 +57,9 @@ export default class TaskForm extends React.Component {
           title: {value: data.title, valid: true},
           due_by: {value: data.due_by, valid: true},
           assigned_to: data.assigned_to_id,
-          category_id: data.category_id
+          category_id: data.category_id,
+          recurring: data.recurring,
+          notes: data.notes
         });
       });
 
@@ -136,7 +140,9 @@ export default class TaskForm extends React.Component {
       title: this.state.title.value, 
       due_by: this.state.due_by.value,
       assigned_to_id: this.state.assigned_to,
-      category_id: this.state.category_id
+      category_id: this.state.category_id,
+      recurring: this.state.recurring,
+      notes: this.state.notes
     };
 
     $.ajax({
@@ -162,7 +168,9 @@ export default class TaskForm extends React.Component {
       title: this.state.title.value,
       due_by: this.state.due_by.value,
       assigned_to_id: this.state.assigned_to,
-      category_id: this.state.category_id
+      category_id: this.state.category_id,
+      recurring: this.state.recurring,
+      notes: this.state.notes
     };
     
     $.ajax({
@@ -185,23 +193,23 @@ export default class TaskForm extends React.Component {
     });  
   }
 
-  deleteTask = () => {
-    const id  = this.props.id
-    if(window.confirm("Are you sure you want to delete this task?")) {
-      $.ajax({
-        type: "DELETE",
-        url: `http://localhost:3001/api/v1/tasks/${id}`,
-        headers: JSON.parse(sessionStorage.getItem('user'))
-      })
-      .done(() => {
-        console.log('deleted')
-        this.props.handleDeletingTask(id);
-      })
-      .fail((response) => {
-        console.log('task deleting failed!');
-      });
-    }
-  }
+  // deleteTask = () => {
+  //   const id  = this.props.id
+  //   if(window.confirm("Are you sure you want to complete this task?")) {
+  //     $.ajax({
+  //       type: "DELETE",
+  //       url: `http://localhost:3001/api/v1/tasks/${id}`,
+  //       headers: JSON.parse(sessionStorage.getItem('user'))
+  //     })
+  //     .done(() => {
+  //       console.log('deleted')
+  //       this.props.handleDeletingTask(id);
+  //     })
+  //     .fail((response) => {
+  //       console.log('task deleting failed!');
+  //     });
+  //   }
+  // }
 
   resetFormErrors () {
     this.setState({formErrors: {}})
@@ -230,8 +238,19 @@ export default class TaskForm extends React.Component {
   closeForm = () => {
     if (window.confirm("Are you sure you want to close this task before saving?")) {
       this.props.handleFormUnmount()
-    }
-    
+    } 
+  }
+
+  handleRecurringChange = () => {
+    this.setState({
+      recurring: !this.state.recurring
+    })
+  }
+
+  handleNotesChange = (e) => {
+    this.setState({
+      notes: e.target.value
+    })
   }
 
 	render() {
@@ -240,7 +259,7 @@ export default class TaskForm extends React.Component {
     };
 
     let users = this.props.users.map( user => {
-      return(<option key={user.id} value={user.id}>{user.uid}</option>)
+      return(<option key={user.id} value={user.id}>{user.name}</option>)
     })
 
     let categories = this.state.categories.map( category => {
@@ -258,38 +277,62 @@ export default class TaskForm extends React.Component {
             id="task-title" 
             placeholder='Task Title'
 	          value={this.state.title.value}
-	          onChange={this.handleChange} />
+	          onChange={this.handleChange} 
+          />
+          
+          <div className="date-row">
+            <div>
+              Due Date
+              <Datetime 
+  	         	input={true}
+  	         	inputProps={inputProps}
+              value={moment(this.state.due_by.value)}
+              onChange={this.setDueBy} 
+              className="datetime" 
+              />
+            </div>
 
-	         <Datetime 
-	         	input={false} 
-	         	open={true} 
-	         	inputProps={inputProps}
-            value={moment(this.state.due_by.value)}
-            onChange={this.setDueBy} 
-            className="datetime" />
+            <div>
+              <label>Recurring: </label>
+              <input type="checkbox" checked={this.state.recurring} onChange={this.handleRecurringChange}/>
+            </div>
 
-          <select value={this.state.assigned_to} onChange={this.handleDropdown} name="assigned_to">
-            {users}
-          </select>
+            <div>
+              <label>Assigned To: </label>
+              <select value={this.state.assigned_to} onChange={this.handleDropdown} name="assigned_to">
+                {users}
+              </select>
+            </div>
+          </div>
 
-          <label>Category:</label>
-          <select value={this.state.category_id} onChange={this.handleDropdown} name="category_id">
-            {categories}
-          </select>
+          <div>
+            <label>Notes: </label>
+            <textarea value={this.state.notes} name='notes' onChange={this.handleNotesChange}/>
+          </div>
 
-	        <input type='submit'
+          <div>
+            <label>Category: </label>
+            <select value={this.state.category_id} onChange={this.handleDropdown} name="category_id">
+              {categories}
+            </select>
+          </div>
+
+	        <input 
+            type='submit'
 	          value={this.state.editing ? 'Update Task' : 'Make Task'}
 	          className='submit-button'
-	          disabled={!this.state.formValid} />
+	          disabled={!this.state.formValid} 
+          />
+
 	      </form>
 
-	      {this.state.editing && (
-	        <p>
-	          <button onClick={this.deleteTask}>
-	            Delete task
-	          </button>
-	        </p>
-	      )}
+{/*        {this.state.editing && (
+          <p>
+            <button onClick={this.deleteTask}>
+              Delete task
+            </button>
+          </p>
+        )}*/}
       </div>
 		)    
 	}

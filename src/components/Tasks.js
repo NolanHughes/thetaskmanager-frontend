@@ -18,7 +18,8 @@ export default class Tasks extends React.Component {
       category: 1,
       editing: false,
       taskId: null,
-      renderForm: false
+      renderForm: false,
+      formValid: false
     }
     
     this.handleFormUnmount = this.handleFormUnmount.bind(this);
@@ -83,7 +84,9 @@ export default class Tasks extends React.Component {
         t.due_by = task.due_by
         t.title = task.title
         t.assigned_to_id = task.assigned_to_id
-        t.category_id = task.category_id      
+        t.category_id = task.category_id
+        t.recurring = task.recurring
+        t.notes = task.notes     
 
         const sortedTasks = yourTasks.sort(function(a,b){
           return new Date(a.due_by) - new Date(b.due_by);
@@ -112,6 +115,8 @@ export default class Tasks extends React.Component {
         t.title = task.title
         t.assigned_to_id = task.assigned_to_id
         t.category_id = task.category_id
+        t.recurring = task.recurring
+        t.notes = task.notes
 
         const sortedTasks = assignedTasks.sort(function(a,b){
           return new Date(a.due_by) - new Date(b.due_by);
@@ -178,6 +183,16 @@ export default class Tasks extends React.Component {
 
 
   handleFormMount = (id) => {
+    if (id) {
+      this.setState({
+        formValid: true
+      })
+    } else {
+      this.setState({
+        formValid: false
+      })
+    }
+
     if (this.state.renderForm === false) {
       if (id) {
         this.setState({
@@ -261,10 +276,12 @@ export default class Tasks extends React.Component {
                 yourTasks={this.state.yourTasks.filter(task => task.category_id === this.state.category)} 
                 assignedTasks={this.state.assignedTasks.filter(task => task.category_id === this.state.category)} 
                 openTaskForm={this.handleFormMount} 
-                handleDeletingTask={this.handleDeletingTask} 
+                handleDeletingTask={this.handleDeletingTask}
+                handleAddingTask={this.handleAddingTask} 
                 users={this.state.users}
               />
             </div>
+            
             {this.state.renderForm ? <TaskForm 
               key={this.state.taskId} 
               handleUpdatingTask={this.handleUpdatingTask} 
@@ -273,7 +290,8 @@ export default class Tasks extends React.Component {
               handleFormUnmount={this.handleFormUnmount}
               editing={this.state.editing} 
               id={this.state.taskId} 
-              users={this.state.users}/>: null
+              users={this.state.users}
+              formValid={this.state.formValid}/>: null
             }
           </div>
         </React.Fragment>

@@ -7,17 +7,15 @@ import { TasksHeader } from './TasksHeader'
 export class TasksList extends React.Component {
   render() {
     let yourTasks = this.props.yourTasks.map(task => {
-      let assigned_user = this.props.users.find(user => {
-        return user.id === task.assigned_to_id;
-      });
 
       return(
         <Task 
         task={task} 
         key={task.id}
-        assigned_user={assigned_user}
+        users={this.props.users}
         openTaskForm={this.props.openTaskForm} 
-        handleDeletingTask={this.props.handleDeletingTask} />
+        handleDeletingTask={this.props.handleDeletingTask}
+        handleAddingTask={this.props.handleAddingTask} />
       )
     })
 
@@ -30,9 +28,11 @@ export class TasksList extends React.Component {
         <Task 
         task={task} 
         key={task.id}
+        users={this.props.users}
         assigned_user={assigned_user}
         openTaskForm={this.props.openTaskForm} 
-        handleDeletingTask={this.props.handleDeletingTask} />
+        handleDeletingTask={this.props.handleDeletingTask}
+        handleAddingTask={this.props.handleAddingTask} />
       )
     })  
 
@@ -40,7 +40,7 @@ export class TasksList extends React.Component {
     // For task list div id: id="[insert list name here]-task-list"
     // For name prop of TasksHeader: Capital letter of what will preface " Task" of display.
     // Make sure these are the same thing or it will break.
-    // debugger
+
     return(
       <div>
       <div>

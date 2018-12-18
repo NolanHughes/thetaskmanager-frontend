@@ -27,7 +27,8 @@ export default class Login extends React.Component {
         JSON.stringify({
           'access-token': jqXHR.getResponseHeader('access-token'),
           client: jqXHR.getResponseHeader('client'),
-          uid: response.data.uid
+          uid: response.data.uid,
+          name: response.data.name
         })
       );
       this.props.history.push('/')

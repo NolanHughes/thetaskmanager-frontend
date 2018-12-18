@@ -5,14 +5,6 @@ import $ from 'jquery'
 import {formatDate} from '../utils/format';
 
 export default class Task extends React.Component {
-  constructor(props) {
-  	super(props)
-
-  	this.state = {
-  		task: props.task
-  	}
-  }
-
   static propTypes = {
 		task: PropTypes.object.isRequired
 	}
@@ -25,18 +17,52 @@ export default class Task extends React.Component {
 		this.props.openTaskForm(id)
 	}
 
-	deleteTask = () => {
-    const id = this.state.task.id
+  addRecurringTask(task) {
+    var date = new Date()
+    date.setDate(date.getDate() + 1);
+    
+    let newTask = {
+      title: task.title, 
+      due_by: date,
+      assigned_to_id: task.assigned_to_id,
+      category_id: task.category_id,
+      recurring: task.recurring,
+      notes: task.notes
+    };
 
-    if(window.confirm("Are you sure you want to delete this task?")) {
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:3001/api/v1/tasks',
+      data: {task: newTask},
+      headers: JSON.parse(sessionStorage.getItem('user'))
+    })
+    .done((data) => {
+      this.props.handleAddingTask(data);      
+    })
+    .fail((response) => {
+      this.setState({
+        formErrors: response.responseJSON,
+        formValid: false
+      });
+    });
+  }
+
+	deleteTask = () => {
+    const task = this.props.task
+
+    if(window.confirm("Are you sure you want to complete this task?")) {
+      if (task.recurring) {
+        this.addRecurringTask(task)
+      }
+
       $.ajax({
         type: "DELETE",
-        url: `http://localhost:3001/api/v1/tasks/${id}`,
+        url: `http://localhost:3001/api/v1/tasks/${task.id}`,
         headers: JSON.parse(sessionStorage.getItem('user'))
       })
       .done(() => {
         console.log('deleted')
-        this.props.handleDeletingTask(id);
+        this.props.handleDeletingTask(task.id);
       })
       .fail((response) => {
         console.log('task deleting failed!');
@@ -45,18 +71,21 @@ export default class Task extends React.Component {
   }
 
 	render() {
+    let createdBy = this.props.users.find( user => user.id === this.props.task.user_id).name
+
 		return(
 		  <div className='task'>
-		    <span>{this.state.task.title}</span>
-		   	<p>Due By: {formatDate(this.state.task.due_by)}</p>
-        <p>Assigned To: {this.props.assigned_user.uid}</p>
-        {(this.props.task.category_id === 1) ? <p>Marketing</p> : <p>Management</p>}
-		   	<button onClick={() => this.handleEditClick(this.state.task.id)}>
-		   		Edit
-		   	</button>
         <button onClick={this.deleteTask}>
           Delete
         </button>
+        <div className="clickable-task-portion" onClick={() => this.handleEditClick(this.props.task.id)}>
+  		    <span className="title">{this.props.task.title}</span>
+  		   	<p>{formatDate(this.props.task.due_by)} | </p>
+          {this.props.assigned_user ? 
+            <p>Assigned To: {this.props.assigned_user.name}</p> :
+            <p>Created By: {createdBy}</p>
+          }
+        </div>
 		  </div>
 	  )
 	}
